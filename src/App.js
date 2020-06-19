@@ -1,31 +1,16 @@
-import React, { useRef } from 'react';
-import Tooltip from './Tooltip';
+import React from 'react';
+import useTooltip from './useTooltip';
 import './App.css';
 
 function App() {
-	const parentRef = useRef(null);
-
-	const clickHandler = event => {
-		const pos = event.target.getBoundingClientRect();
-		console.log(pos);
-		const tooltipLeft = pos.left + pos.width / 2;
-		const tooltipTop = pos.top - 20;
-		console.log(tooltipLeft, tooltipTop);
-
-		const tooltip = new Tooltip(tooltipLeft, tooltipTop);
-		// const parent = event.target.parentNode;
-		// const parent = event.target;
-
-		console.log(parentRef.current, typeof parentRef.current);
-		parentRef.current.appendChild(tooltip);
-		// console.log(parent);
-	};
+	const [handler, tooltips] = useTooltip();
 
 	return (
-		<div className="wrapper" ref={parentRef}>
-			<div className="box one" onClick={clickHandler}></div>
-			<div className="box two"></div>
-			<div className="box three"></div>
+		<div className='wrapper'>
+			<div className='box one' onClick={handler}></div>
+			<div className='box two' onClick={handler}></div>
+			<div className='box three' onClick={handler}></div>
+			{tooltips}
 		</div>
 	);
 }
