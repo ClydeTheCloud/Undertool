@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useRef } from 'react';
+import Tooltip from './Tooltip';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const parentRef = useRef(null);
+
+	const clickHandler = event => {
+		const pos = event.target.getBoundingClientRect();
+		console.log(pos);
+		const tooltipLeft = pos.left + pos.width / 2;
+		const tooltipTop = pos.top - 20;
+		console.log(tooltipLeft, tooltipTop);
+
+		const tooltip = new Tooltip(tooltipLeft, tooltipTop);
+		// const parent = event.target.parentNode;
+		// const parent = event.target;
+
+		console.log(parentRef.current, typeof parentRef.current);
+		parentRef.current.appendChild(tooltip);
+		// console.log(parent);
+	};
+
+	return (
+		<div className="wrapper" ref={parentRef}>
+			<div className="box one" onClick={clickHandler}></div>
+			<div className="box two"></div>
+			<div className="box three"></div>
+		</div>
+	);
 }
 
 export default App;
