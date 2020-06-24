@@ -9,7 +9,7 @@ class Tooltip extends React.Component {
 	basicStyle = {
 		width: 80,
 		height: 30,
-		backgroundColor: '#333333',
+		backgroundColor: '#333',
 		position: 'absolute',
 		left: this.props.tooltipLeft,
 		top: this.props.tooltipTop,
@@ -18,12 +18,30 @@ class Tooltip extends React.Component {
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
+		borderRadius: 5,
+	};
+
+	arrowStyle = {
+		marginTop: -5,
+		position: 'absolute',
+		width: 0,
+		height: 0,
+		borderColor: 'transparent',
+		borderRightColor: 'transparent',
+		borderStyle: 'solid',
+		top: 'auto',
+		bottom: -5,
+		left: '50%',
+		marginLeft: -5,
+		borderWidth: '5px 5px 0',
+		borderTopColor: '#333',
 	};
 
 	render() {
 		return (
 			<div style={this.basicStyle} key={this.key}>
-				tooltip
+				<div>tooltip</div>
+				<div style={this.arrowStyle}></div>
 			</div>
 		);
 	}
@@ -38,9 +56,12 @@ function useTooltip() {
 		return tooltipKey;
 	};
 
-	const tooltipClickHandler = (event) => {
-		if (tooltips.at.some((target) => target === event.target)) {
-			setTooltips({ tt: tooltips.tt.filter((tt) => tt.props.id !== event.target), at: tooltips.at.filter((at) => at !== event.target) });
+	const tooltipClickHandler = event => {
+		if (tooltips.at.some(target => target === event.target)) {
+			setTooltips({
+				tt: tooltips.tt.filter(tt => tt.props.id !== event.target),
+				at: tooltips.at.filter(at => at !== event.target),
+			});
 			return;
 		}
 		const pos = event.target.getBoundingClientRect();
@@ -48,12 +69,20 @@ function useTooltip() {
 		const tooltipTop = pos.top - 50;
 
 		const activeTarget = event.target;
-		const tooltip = new Tooltip({ tooltipLeft, tooltipTop, id: event.target, key: genId() });
+		const tooltip = new Tooltip({
+			tooltipLeft,
+			tooltipTop,
+			id: event.target,
+			key: genId(),
+		});
 
-		setTooltips({ tt: [...tooltips.tt, tooltip], at: [...tooltips.at, activeTarget] });
+		setTooltips({
+			tt: [...tooltips.tt, tooltip],
+			at: [...tooltips.at, activeTarget],
+		});
 	};
 
-	const allTooltips = tooltips.tt.map((tt) => {
+	const allTooltips = tooltips.tt.map(tt => {
 		return tt.render();
 	});
 
