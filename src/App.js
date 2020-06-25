@@ -1,15 +1,28 @@
 import React from 'react';
-import useTooltip from './useTooltip';
+import useTooltip from './useTooltip/useTooltip';
 import './App.css';
 
 function App() {
-	const [handler, tooltips] = useTooltip();
+	const [tooltips, handler, handlerClose] = useTooltip();
 
 	return (
 		<div className='wrapper'>
-			<div className='box one' onClick={handler}></div>
-			<div className='box two' onClick={handler}></div>
-			<div className='box three' onClick={handler}></div>
+			<div className='box one' tooltipconfig='left click' content='This is a click-tooltip from the left' onClick={handler}></div>
+			<div
+				className='box two'
+				tooltipconfig='top hover'
+				content='This is a hover-tooltip from the top'
+				onMouseEnter={handler}
+				onMouseLeave={handlerClose}
+			></div>
+			<div
+				className='box three'
+				tooltipconfig='bottom hover'
+				content='This is a hover-tooltip from the bottom'
+				onMouseEnter={handler}
+				onMouseLeave={handlerClose}
+			></div>
+			<div className='box four' tooltipconfig='right click' content='This is a click-tooltip from the right' onClick={handler}></div>
 			{tooltips}
 		</div>
 	);
