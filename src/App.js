@@ -17,7 +17,7 @@ function App() {
 			></div>
 			<div
 				className='box three'
-				tooltipconfig='bottom hover'
+				tooltipconfig='bottom hover autoclose 3'
 				content='This is a hover-tooltip from the bottom'
 				onMouseEnter={handler}
 				onMouseLeave={handlerClose}

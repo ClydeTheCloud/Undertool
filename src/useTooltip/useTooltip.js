@@ -15,7 +15,24 @@ function useTooltip() {
 	};
 
 	// Function for closing tooltip. If tooltip method is 'click', it runs on a second click on target, if method is 'hover', it runs on a onMouseLeave event
-	const handleClose = (event) => {
+	/* REWRITE THIS, THERE'S GOT TO BE A BETTER WAY (autoclose and delay) */
+
+	/* I got it, I just need to move handleClose function back into tooltipClickHandler
+	...and rewrite tooltipClickHandler so that it can manage ALL EVENTS.
+	...cause in any way, it already handles not just clicks but also mouseenter event
+	*/
+	const handleClose = (event, config) => {
+		if (event.type === 'mouseenter') {
+			if (config.autoclose) {
+				setTimeout(() => {
+					setTooltips({
+						TT: tooltips.TT.filter((TT) => TT.props.id !== event.target),
+						AT: tooltips.AT.filter((AT) => AT !== event.target),
+					});
+				}, config.delay * 1000);
+				return;
+			}
+		}
 		setTooltips({
 			TT: tooltips.TT.filter((TT) => TT.props.id !== event.target),
 			AT: tooltips.AT.filter((AT) => AT !== event.target),
@@ -26,10 +43,10 @@ function useTooltip() {
 		// Get value of tooltipConfig attribute and send it helper function
 		const configString = event.target.getAttribute('tooltipConfig');
 		let config;
-		console.log('config attribute is:', configString);
+		// console.log('tooltipConfig attribute is:', configString);
 		try {
 			config = configParser(configString);
-			console.log(config);
+			// console.log(config);
 		} catch (e) {
 			console.error('Found conflicting property values: value', e.val1, 'and value', e.val2, 'of property', e.prop);
 		}
@@ -57,6 +74,10 @@ function useTooltip() {
 			key: genId(),
 			content: event.target.getAttribute('content'),
 		});
+
+		if (config.autoclose) {
+			handleClose(event, config);
+		}
 
 		// Add new Tooltip and Active Target of that Tooltip to state.
 		setTooltips({
