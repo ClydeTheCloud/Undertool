@@ -1,46 +1,39 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
-import configParser from './utils/configParser';
 import Tooltip from './Tooltip';
+import configParser from './utils/configParser';
 import coordinator from './utils/coordinator';
 
-function useTooltip() {
+function useTooltip(child) {
 	const [tooltips, setTooltips] = useState({ TT: [], AT: [] }); // TT = array of all Tooltips; AT = array of Active Targets (on which Tooltips are called).
 	const [tooltipKey, setTooltipKey] = useState(0);
 
-	// Generate key for React
+	// useRef is used to access current version of state inside setTimeout instead of closure-version.
+	const tooltipsRef = useRef(tooltips);
+	tooltipsRef.current = tooltips;
+
+	// Generate key for React.
 	const genId = () => {
 		setTooltipKey(tooltipKey + 1);
 		return tooltipKey;
 	};
 
-	// Function for closing tooltip. If tooltip method is 'click', it runs on a second click on target, if method is 'hover', it runs on a onMouseLeave event
-	/* REWRITE THIS, THERE'S GOT TO BE A BETTER WAY (autoclose and delay) */
-
-	/* I got it, I just need to move handleClose function back into tooltipClickHandler
-	...and rewrite tooltipClickHandler so that it can manage ALL EVENTS.
-	...cause in any way, it already handles not just clicks but also mouseenter event
-	*/
-	const handleClose = (event, config) => {
+	// Main function - universal event handler
+	const tooltipEventHandler = (event) => {
+		// Persist if event hover-based (possibility of using setTimeout)
 		if (event.type === 'mouseenter') {
-			if (config.autoclose) {
-				setTimeout(() => {
-					setTooltips({
-						TT: tooltips.TT.filter((TT) => TT.props.id !== event.target),
-						AT: tooltips.AT.filter((AT) => AT !== event.target),
-					});
-				}, config.delay * 1000);
-				return;
-			}
+			event.persist();
 		}
-		setTooltips({
-			TT: tooltips.TT.filter((TT) => TT.props.id !== event.target),
-			AT: tooltips.AT.filter((AT) => AT !== event.target),
-		});
-	};
 
-	const tooltipClickHandler = (event) => {
-		// Get value of tooltipConfig attribute and send it helper function
+		// Function for closing Tooltips
+		const close = (e) => {
+			setTooltips({
+				TT: tooltipsRef.current.TT.filter((TT) => TT.props.id !== e.target),
+				AT: tooltipsRef.current.AT.filter((AT) => AT !== e.target),
+			});
+		};
+
+		// Get value of tooltipConfig attribute and send it to helper function
 		const configString = event.target.getAttribute('tooltipConfig');
 		let config;
 		// console.log('tooltipConfig attribute is:', configString);
@@ -55,9 +48,20 @@ function useTooltip() {
 			// Check if clicked element is on the list of active targets.
 			if (tooltips.AT.some((target) => target === event.target)) {
 				// If it is, remove this target and respective Tooltip.
-				handleClose(event);
+				close(event);
 				return;
 			}
+		}
+
+		if (event.type === 'mouseleave' && !config.autoclose) {
+			close(event);
+			return;
+		} else if (event.type === 'mouseleave' && config.autoclose) {
+			event.persist();
+			setTimeout(() => {
+				close(event);
+			}, config.delay * 1000);
+			return;
 		}
 
 		// Get position of clicked element and calculate position of a Tooltip based on config.position property.
@@ -65,19 +69,18 @@ function useTooltip() {
 
 		// Generate new Tooltip.
 		const tooltip = new Tooltip({
+			child,
 			position: config.position,
 			horizontalDirection,
 			horizontalValue,
 			verticalDirection,
 			verticalValue,
+			// timer: config.delay,
+			// timerStatus,
 			id: event.target,
 			key: genId(),
 			content: event.target.getAttribute('content'),
 		});
-
-		if (config.autoclose) {
-			handleClose(event, config);
-		}
 
 		// Add new Tooltip and Active Target of that Tooltip to state.
 		setTooltips({
@@ -91,7 +94,7 @@ function useTooltip() {
 		return TT.render();
 	});
 
-	return [allTooltips, tooltipClickHandler, handleClose];
+	return [allTooltips, tooltipEventHandler];
 }
 
 export default useTooltip;

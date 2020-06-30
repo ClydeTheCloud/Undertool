@@ -1,5 +1,7 @@
 import React from 'react';
 
+// import TimerSvg from './utils/timer/TimerSvg';
+
 class Tooltip extends React.Component {
 	// constructor(props) {
 	// 	super(props);
@@ -84,10 +86,19 @@ class Tooltip extends React.Component {
 		},
 	};
 
+	// setTimer() {
+	// 	if (this.props.timer) {
+	// 		return TimerSvg(this.props.timer, this.props.timerStatus);
+	// 	}
+	// }
+
 	render() {
 		return (
 			<div style={this.styles.tooltipBody} key={this.props.key}>
-				<div style={this.styles.tooltipContent}>{this.props.content}</div>
+				<div style={this.styles.tooltipContent}>
+					{this.props.child || this.props.content}
+					{/* {this.setTimer()} */}
+				</div>
 				<div style={this.styles.tooltipArrow}></div>
 			</div>
 		);
