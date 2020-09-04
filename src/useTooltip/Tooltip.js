@@ -1,18 +1,18 @@
-import React from 'react';
+import React from 'react'
 
-// import TimerSvg from './utils/timer/TimerSvg';
+import TimerSvg from './utils/timer/TimerSvg'
 
 class Tooltip extends React.Component {
 	// constructor(props) {
-	// 	super(props);
+	// 	super(props)
 	// }
 
 	// This function helps to center the Tooltip to element
 	transformTranslateHelper(position) {
 		if (position === 'top' || position === 'bottom') {
-			return 'translateX(-50%)';
+			return 'translateX(-50%)'
 		} else if (position === 'left' || position === 'right') {
-			return 'translateY(-50%)';
+			return 'translateY(-50%)'
 		}
 	}
 
@@ -25,7 +25,7 @@ class Tooltip extends React.Component {
 				transform: 'translateX(-50%)',
 				borderWidth: '5px 5px 0 5px',
 				borderTopColor: '#333',
-			};
+			}
 		} else if (position === 'bottom') {
 			return {
 				top: 0,
@@ -34,7 +34,7 @@ class Tooltip extends React.Component {
 				marginTop: -5,
 				borderWidth: '0 5px 5px 5px',
 				borderBottomColor: '#333',
-			};
+			}
 		} else if (position === 'left') {
 			return {
 				top: '50%',
@@ -43,7 +43,7 @@ class Tooltip extends React.Component {
 				transform: 'translateY(-50%)',
 				borderWidth: '5px 0 5px 5px',
 				borderLeftColor: '#333',
-			};
+			}
 		} else if (position === 'right') {
 			return {
 				top: '50%',
@@ -52,7 +52,7 @@ class Tooltip extends React.Component {
 				marginLeft: -5,
 				borderWidth: '5px 5px 5px 0',
 				borderRightColor: '#333',
-			};
+			}
 		}
 	}
 
@@ -84,25 +84,25 @@ class Tooltip extends React.Component {
 			justifyContent: 'center',
 			alignItems: 'center',
 		},
-	};
+	}
 
-	// setTimer() {
-	// 	if (this.props.timer) {
-	// 		return TimerSvg(this.props.timer, this.props.timerStatus);
-	// 	}
-	// }
+	setTimer() {
+		if (this.props.timer) {
+			return TimerSvg(this.props.timer, this.props.timerStatus)
+		}
+	}
 
 	render() {
 		return (
 			<div style={this.styles.tooltipBody} key={this.props.key}>
 				<div style={this.styles.tooltipContent}>
 					{this.props.child || this.props.content}
-					{/* {this.setTimer()} */}
+					{this.setTimer()}
 				</div>
 				<div style={this.styles.tooltipArrow}></div>
 			</div>
-		);
+		)
 	}
 }
 
-export default Tooltip;
+export default Tooltip
