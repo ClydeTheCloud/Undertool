@@ -1,6 +1,6 @@
 import React from 'react'
 
-import TimerSvg from './utils/timer/TimerSvg'
+// import TimerSvg from './utils/timer/TimerSvg'
 
 class Tooltip extends React.Component {
 	// constructor(props) {
@@ -10,9 +10,9 @@ class Tooltip extends React.Component {
 	// This function helps to center the Tooltip to element
 	transformTranslateHelper(position) {
 		if (position === 'top' || position === 'bottom') {
-			return 'translateX(-50%)'
+			return 'translate(var(--horizontal))' /* 'translateX(-50%)' */
 		} else if (position === 'left' || position === 'right') {
-			return 'translateY(-50%)'
+			return 'translate(var(--vertical))' /* 'translateY(-50%)' */
 		}
 	}
 
@@ -66,6 +66,10 @@ class Tooltip extends React.Component {
 			transform: this.transformTranslateHelper(this.props.position),
 			color: 'white',
 			borderRadius: 5,
+			zIndex: this.props.index,
+			animationName: this.props.animation,
+			animationDuration: this.props.animationLength ? `${this.props.animationLength * 0.1}s` : '0.2s',
+			animationFillMode: 'forwards',
 		},
 
 		tooltipArrow: {
@@ -86,18 +90,12 @@ class Tooltip extends React.Component {
 		},
 	}
 
-	setTimer() {
-		if (this.props.timer) {
-			return TimerSvg(this.props.timer, this.props.timerStatus)
-		}
-	}
-
 	render() {
 		return (
-			<div style={this.styles.tooltipBody} key={this.props.key}>
+			<div style={this.styles.tooltipBody} id={`ttid-${this.props.key}`} key={this.props.key}>
 				<div style={this.styles.tooltipContent}>
-					{this.props.child || this.props.content}
-					{this.setTimer()}
+					{this.props.child || this.props.tooltipcontent}
+					{/* {this.setTimer()} */}
 				</div>
 				<div style={this.styles.tooltipArrow}></div>
 			</div>

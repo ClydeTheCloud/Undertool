@@ -5,108 +5,135 @@ import configParser from './utils/configParser'
 import coordinator from './utils/coordinator'
 import vaultCheck from './utils/vault'
 
-// Object for storing timeOut-IDs of different Tooltips
-const timeoutIds = {}
+// Object for storing timeOut-IDs of different Tooltips, both for close-animation and rendering
+const timeoutIds = { closedelay: {}, animation: {}, hover: {} }
 
-function useTooltip(child) {
+function useTooltip(children) {
 	const [tooltips, setTooltips] = useState({})
 
-	// useRef is used to access current version of state inside setTooltips instead of closure-version.
+	// useRef is used for access to current version of state inside timers.
 	const tooltipsRef = useRef(tooltips)
 	tooltipsRef.current = tooltips
 
+	// if (tooltips.length > 1) {
+	// window.addEventListener('resize', () => {
+	// 	Object.values(tooltipsRef.current).forEach(t => t.resizer())
+	// })
+	// }
 	// Main function - universal event handler
 	const tooltipEventHandler = event => {
 		// Get unique for every target ID
-		const targetID = vaultCheck(event.target)
+		const parentId = vaultCheck(event.currentTarget)
 
-		console.log(event.type, targetID)
-		// Persist if event hover-based (possibility of using setTimeout)
-		if (event.type === 'mouseenter') {
-			event.persist()
-		}
+		console.log(tooltips)
+		//
+		clearTimeout(timeoutIds.animation[parentId])
 
-		// Function for closing Tooltips
-		const close = e => {
-			setTooltips(
-				Object.fromEntries(
-					Object.entries(tooltipsRef.current).filter(
-						t => t[1].props.id !== e.target
-					)
-				)
-			)
-		}
+		const eventTarget = event.target
 
 		// Get value of tooltipConfig attribute and send it to helper function
-		const configString = event.target.getAttribute('tooltipConfig')
+		const configString = event.currentTarget.getAttribute('tooltipConfig')
 		let config
-		// console.log('tooltipConfig attribute is:', configString);
 		try {
 			config = configParser(configString)
-			// console.log(config);
 		} catch (e) {
-			console.error(
-				'Found conflicting property values: value',
-				e.val1,
-				'and value',
-				e.val2,
-				'of property',
-				e.prop
-			)
+			console.error('Something is wrong with your config')
+			console.error('Target is:', eventTarget)
+			console.error('Config is:', configString)
+			console.error(e)
 		}
 
-		if (config.method === 'click') {
-			// Check if clicked element is on the list of active targets.
-			if (tooltips.AT.some(target => target === event.target)) {
-				// If it is, remove this target and respective Tooltip.
-				close(event)
+		if ((config.method === 'click' && event.type !== 'click') || (config.method === 'hover' && event.type === 'click')) {
+			throw new Error('Conflict between method of tooltip opening and event type')
+		}
+
+		if (config.nested) {
+			// return if event happened not on the element itself
+			if (event.target !== event.currentTarget) {
 				return
 			}
 		}
 
-		if (event.type === 'mouseenter' && config.autoclose) {
-			clearTimeout(timeoutIds[targetID])
+		if (config.method === 'click') {
+			// Check if tooltip associated with targeted element is on the list of active tooltips
+			if (Object.entries(tooltips).some(t => parseInt(t[0]) === parentId)) {
+				// If it is, remove this target and respective Tooltip.
+				close(eventTarget, config, parentId)
+				return
+			}
 		}
 
-		if (event.type === 'mouseleave' && !config.autoclose) {
-			close(event)
+		if (config.methodLength && event.type === 'mouseleave' && !tooltipsRef.current[parentId]) {
+			clearTimeout(timeoutIds.hover[parentId])
 			return
-		} else if (event.type === 'mouseleave' && config.autoclose) {
-			event.persist()
-			timeoutIds[targetID] = setTimeout(() => {
-				close(event)
-			}, config.delay * 1000)
+		}
+
+		if (event.type === 'mouseenter' && config.closedelay) {
+			clearTimeout(timeoutIds.closedelay[parentId])
+		}
+
+		if (event.type === 'mouseleave' && !config.closedelay) {
+			close(eventTarget, config, parentId)
+			return
+		} else if (event.type === 'mouseleave' && config.closedelay && config.closedelayLength) {
+			timeoutIds.closedelay[parentId] = setTimeout(() => {
+				close(eventTarget, config, parentId)
+			}, config.closedelayLength * 500)
 			return
 		}
 
 		// Get position of clicked element and calculate position of a Tooltip based on config.position property.
-		let [
-			horizontalDirection,
-			horizontalValue,
-			verticalDirection,
-			verticalValue,
-		] = coordinator(event.target, config)
+		let [horizontalDirection, horizontalValue, verticalDirection, verticalValue] = coordinator(
+			event.currentTarget,
+			config.position
+		)
+
+		// get tooltipcontentid attribute to find required child
+		const tooltipContentId = event.currentTarget.getAttribute('tooltipcontentid')
+
+		const targetIndex = event.target.style.zIndex
+		const tooltipIndex = targetIndex ? parseInt(targetIndex) + 1 : 2
+
+		if (config.animation !== 'fade') {
+			if (config.animation && (config.position === 'left' || config.position === 'right')) {
+				config.animation = config.animation + '-v'
+			} else if (config.animation && (config.position === 'top' || config.position === 'bottom')) {
+				config.animation = config.animation + '-h'
+			}
+		}
+		// console.log(config)
 
 		// Generate new Tooltip.
 		const tooltip = new Tooltip({
-			child,
+			child: tooltipContentId ? children[tooltipContentId] : null,
 			position: config.position,
 			horizontalDirection,
 			horizontalValue,
 			verticalDirection,
 			verticalValue,
-			timer: config.delay,
-			// timerStatus,
-			id: event.target,
-			key: targetID,
-			content: event.target.getAttribute('content'),
+			id: event.currentTarget,
+			key: parentId,
+			tooltipcontent: event.currentTarget.getAttribute('tooltipcontent'),
+			index: tooltipIndex,
+			animation: config.animation || null,
+			animationLength: config.animationLength,
 		})
 
-		// Add new Tooltip and Active Target of that Tooltip to state.
-		setTooltips({
-			...tooltips,
-			[targetID]: tooltip,
-		})
+		// Set timeout to adding new Tooltip to state if method in config have length...
+		if (config.methodLength) {
+			timeoutIds.hover[parentId] = setTimeout(() => {
+				setTooltips({
+					...tooltipsRef.current,
+					[parentId]: tooltip,
+				})
+			}, config.methodLength * 500)
+			//... or Add new Tooltip right away.
+		} else {
+			setTooltips({
+				...tooltipsRef.current,
+				[parentId]: tooltip,
+			})
+		}
 	}
 
 	// Array of all rendered Tooltips.
@@ -114,7 +141,29 @@ function useTooltip(child) {
 		return t.render()
 	})
 
-	console.log('END', tooltips)
+	// Function for closing Tooltips
+	function close(eventTarget, config, key) {
+		const tooltip = document.getElementById(`ttid-${key}`)
+		if (config && config.animation && tooltip) {
+			if (config.animation === 'fade') {
+				tooltip.style.animationName = config.animation.concat('-close')
+			} else {
+				if (config.position === 'left' || config.position === 'right') {
+					tooltip.style.animationName = config.animation.concat('-close-v')
+				} else if (config.position === 'top' || config.position === 'bottom') {
+					tooltip.style.animationName = config.animation.concat('-close-h')
+				}
+			}
+			timeoutIds.animation[key] = setTimeout(
+				() => {
+					setTooltips(Object.fromEntries(Object.entries(tooltipsRef.current).filter(t => t[1].props.id !== eventTarget)))
+				},
+				config.animationLength ? config.animationLength * 100 : 200
+			)
+			return
+		}
+		setTooltips(Object.fromEntries(Object.entries(tooltipsRef.current).filter(t => t[1].props.id !== eventTarget)))
+	}
 
 	return [allTooltips, tooltipEventHandler]
 }
