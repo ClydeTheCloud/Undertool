@@ -1,8 +1,7 @@
-import { useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 
 import Tooltip from './Tooltip'
 import configParser from './utils/configParser'
-import coordinator from './utils/coordinator'
 import vaultCheck from './utils/vault'
 
 // Object for storing timeOut-IDs of different Tooltips, both for close-animation and rendering
@@ -15,18 +14,11 @@ function useTooltip(children) {
 	const tooltipsRef = useRef(tooltips)
 	tooltipsRef.current = tooltips
 
-	// if (tooltips.length > 1) {
-	// window.addEventListener('resize', () => {
-	// 	Object.values(tooltipsRef.current).forEach(t => t.resizer())
-	// })
-	// }
 	// Main function - universal event handler
 	const tooltipEventHandler = event => {
 		// Get unique for every target ID
 		const parentId = vaultCheck(event.currentTarget)
 
-		console.log(tooltips)
-		//
 		clearTimeout(timeoutIds.animation[parentId])
 
 		const eventTarget = event.target
@@ -83,41 +75,37 @@ function useTooltip(children) {
 		}
 
 		// Get position of clicked element and calculate position of a Tooltip based on config.position property.
-		let [horizontalDirection, horizontalValue, verticalDirection, verticalValue] = coordinator(
-			event.currentTarget,
-			config.position
-		)
+		// let [horizontalDirection, horizontalValue, verticalDirection, verticalValue] = coordinator(
+		// 	event.currentTarget,
+		// 	config.position
+		// )
 
 		// get tooltipcontentid attribute to find required child
 		const tooltipContentId = event.currentTarget.getAttribute('tooltipcontentid')
 
 		const targetIndex = event.target.style.zIndex
-		const tooltipIndex = targetIndex ? parseInt(targetIndex) + 1 : 2
+		const tooltipIndex = targetIndex ? parseInt(targetIndex) + 2 : 3
 
-		if (config.animation !== 'fade') {
-			if (config.animation && (config.position === 'left' || config.position === 'right')) {
-				config.animation = config.animation + '-v'
-			} else if (config.animation && (config.position === 'top' || config.position === 'bottom')) {
-				config.animation = config.animation + '-h'
-			}
-		}
+		console.log(targetIndex)
+		console.log(tooltipIndex)
+
 		// console.log(config)
 
 		// Generate new Tooltip.
-		const tooltip = new Tooltip({
-			child: tooltipContentId ? children[tooltipContentId] : null,
-			position: config.position,
-			horizontalDirection,
-			horizontalValue,
-			verticalDirection,
-			verticalValue,
-			id: event.currentTarget,
-			key: parentId,
-			tooltipcontent: event.currentTarget.getAttribute('tooltipcontent'),
-			index: tooltipIndex,
-			animation: config.animation || null,
-			animationLength: config.animationLength,
-		})
+		const tooltip = (
+			<Tooltip
+				child={tooltipContentId ? children[tooltipContentId] : null}
+				position={config.position}
+				id={event.currentTarget}
+				key={parentId}
+				parentId={parentId}
+				tooltipcontent={event.currentTarget.getAttribute('tooltipcontent')}
+				index={tooltipIndex}
+				animation={config.animation || null}
+				animationLength={config.animationLength}
+				// class="test-class"
+			/>
+		)
 
 		// Set timeout to adding new Tooltip to state if method in config have length...
 		if (config.methodLength) {
@@ -137,23 +125,13 @@ function useTooltip(children) {
 	}
 
 	// Array of all rendered Tooltips.
-	const allTooltips = Object.values(tooltips).map(t => {
-		return t.render()
-	})
+	const allTooltips = Object.values(tooltips)
 
 	// Function for closing Tooltips
 	function close(eventTarget, config, key) {
 		const tooltip = document.getElementById(`ttid-${key}`)
 		if (config && config.animation && tooltip) {
-			if (config.animation === 'fade') {
-				tooltip.style.animationName = config.animation.concat('-close')
-			} else {
-				if (config.position === 'left' || config.position === 'right') {
-					tooltip.style.animationName = config.animation.concat('-close-v')
-				} else if (config.position === 'top' || config.position === 'bottom') {
-					tooltip.style.animationName = config.animation.concat('-close-h')
-				}
-			}
+			tooltip.style.animationName = config.animation.concat('-close')
 			timeoutIds.animation[key] = setTimeout(
 				() => {
 					setTooltips(Object.fromEntries(Object.entries(tooltipsRef.current).filter(t => t[1].props.id !== eventTarget)))

@@ -1,4 +1,5 @@
 import React from 'react'
+
 import useTooltip from './useTooltip/useTooltip'
 import './App.css'
 
@@ -27,7 +28,7 @@ function App() {
 				<div className="wrapper click">
 					<div
 						className="box one"
-						tooltipconfig="left click fade"
+						tooltipconfig="left click slide"
 						tooltipcontent="This is a click-tooltip from the left"
 						onClick={handler}
 					></div>
@@ -39,7 +40,7 @@ function App() {
 					></div>
 					<div
 						className="box three center"
-						tooltipconfig="bottom click nested pop"
+						tooltipconfig="bottom click nested slide"
 						tooltipcontentid="thirdBox"
 						// tooltipcontent={'This is a hover-tooltip withChild'}
 						onClick={handler}
@@ -48,7 +49,7 @@ function App() {
 					</div>
 					<div
 						className="box four"
-						tooltipconfig="right click scale"
+						tooltipconfig="right click slide"
 						tooltipcontent="This is a click-tooltip from the right"
 						onClick={handler}
 					></div>
@@ -58,21 +59,21 @@ function App() {
 				<div className="wrapper hover">
 					<div
 						className="box one"
-						tooltipconfig="left hover2 closedelay3 scale2"
+						tooltipconfig="left hover2 closedelay3 scale1"
 						tooltipcontent="This is a hover-tooltip from the left"
 						onMouseEnter={handler}
 						onMouseLeave={handler}
 					></div>
 					<div
 						className="box two"
-						tooltipconfig="top hover2 closedelay3 slide1"
+						tooltipconfig="top hover2 closedelay3 slide3"
 						tooltipcontent="This is a hover-tooltip from the top"
 						onMouseEnter={handler}
 						onMouseLeave={handler}
 					></div>
 					<div
 						className="box three center"
-						tooltipconfig="bottom hover2 slide1"
+						tooltipconfig="bottom hover2 slide6"
 						tooltipcontentid="seventhBox"
 						onMouseEnter={handler}
 						onMouseLeave={handler}

@@ -126,15 +126,60 @@ h3 {
 	color: white;
 }
 
-/* TODO split this CSS into modules */
-body {
-	--horizontal: -50%, 0;
-	--vertical: 0, -50%;
-	--hx: -50%;
-	--hy: 0;
-	--vx: 0;
-	--vy: -50%;
+.test-class {
+	background-color: violet;
+	color: #000;
+	padding: 3em;
+	font-size: 1.5em;
 }
+
+.tooltip-default-style {
+	padding: 15px;
+	background-color: #333;
+	color: white;
+	border-radius: 5px;
+}
+
+/* TODO split this CSS into modules */
+
+.tooltip-helper-class[data-popper-placement^='top'] .tooltip-arrow {
+	bottom: -4px;
+}
+
+.tooltip-helper-class[data-popper-placement^='bottom'] .tooltip-arrow {
+	top: -4px;
+}
+
+.tooltip-helper-class[data-popper-placement^='left'] .tooltip-arrow {
+	right: -4px;
+}
+
+.tooltip-helper-class[data-popper-placement^='right'] .tooltip-arrow {
+	left: -4px;
+}
+
+.tooltip-arrow,
+.tooltip-arrow::before {
+	position: absolute;
+	width: 8px;
+	height: 8px;
+	z-index: -1;
+}
+
+.tooltip-arrow::before {
+	content: '';
+	transform: rotate(45deg);
+	background: #333;
+}
+
+/* .tooltip-arrow {
+	position: absolute;
+	width: 8px;
+	height: 8px;
+	border-color: red;
+	border-style: solid;
+	zIndex: this.props.index - 1,
+} */
 
 @keyframes fade {
 	from {
@@ -154,128 +199,64 @@ body {
 	}
 }
 
-/* ------------------------------------------------------------------------------------------------------------------------------ */
-
-@keyframes slide-v {
+@keyframes slide {
 	from {
 		opacity: 0;
-		transform: translate(100px, -50%);
+		transform: translateX(100px);
 	}
 	to {
 		opacity: 1;
-		transform: translate(0, -50%);
+		transform: translateX(0);
 	}
 }
 
-@keyframes slide-close-v {
+@keyframes slide-close {
 	from {
 		opacity: 1;
-		transform: translate(0, -50%);
+		transform: translateX(0);
 	}
 	to {
 		opacity: 0;
-		transform: translate(-100px, -50%);
+		transform: translateX(-100px);
 	}
 }
 
-@keyframes slide-h {
+@keyframes pop {
 	from {
 		opacity: 0;
-		transform: translate(calc(-50% + 100px), 0px);
+		transform: translateY(100px);
 	}
 	to {
 		opacity: 1;
-		transform: translate(-50%, 0px);
+		transform: translateY(0);
 	}
 }
 
-@keyframes slide-close-h {
+@keyframes pop-close {
 	from {
 		opacity: 1;
-		transform: translate(-50%, 0px);
+		transform: translateY(0);
 	}
 	to {
 		opacity: 0;
-		transform: translate(calc(-50% - 100px), 0px);
+		transform: translateY(100px);
 	}
 }
 
-@keyframes pop-v {
+@keyframes scale {
 	from {
-		opacity: 0;
-		transform: translate(0, calc(-50% + 100px));
+		transform: scale(0);
 	}
 	to {
-		opacity: 1;
-		transform: translate(0, -50%);
+		transform: scale(1);
 	}
 }
 
-@keyframes pop-close-v {
+@keyframes scale-close {
 	from {
-		opacity: 1;
-		transform: translate(0, -50%);
+		transform: scale(1);
 	}
 	to {
-		opacity: 0;
-		transform: translate(0, calc(-50% + 100px));
-	}
-}
-
-@keyframes pop-h {
-	from {
-		opacity: 0;
-		transform: translate(-50%, 100px);
-	}
-	to {
-		opacity: 1;
-		transform: translate(-50%, 0);
-	}
-}
-
-@keyframes pop-close-h {
-	from {
-		opacity: 1;
-		transform: translate(-50%, 0);
-	}
-	to {
-		opacity: 0;
-		transform: translate(-50%, 100px);
-	}
-}
-
-@keyframes scale-v {
-	from {
-		transform: translate(0, -50%) scale(0);
-	}
-	to {
-		transform: translate(0, -50%) scale(1);
-	}
-}
-
-@keyframes scale-close-v {
-	from {
-		transform: translate(0, -50%) scale(1);
-	}
-	to {
-		transform: translate(0, -50%) scale(0);
-	}
-}
-
-@keyframes scale-h {
-	from {
-		transform: translate(-50%, 0) scale(0);
-	}
-	to {
-		transform: translate(-50%, 0) scale(1);
-	}
-}
-
-@keyframes scale-close-h {
-	from {
-		transform: translate(-50%, 0) scale(1);
-	}
-	to {
-		transform: translate(-50%, 0) scale(0);
+		transform: scale(0);
 	}
 }

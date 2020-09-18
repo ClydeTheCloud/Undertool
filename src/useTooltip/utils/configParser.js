@@ -8,7 +8,7 @@ const possibleValues = [
 ]
 
 function configParser(configString) {
-	// Conver string into array
+	// Convert string into array
 	const configArray = configString.toLowerCase().trim().split(' ')
 
 	// Check and transform values in array
@@ -23,7 +23,7 @@ function configParser(configString) {
 		finalConfig.positionLength ||
 		finalConfig.nestedLength
 	) {
-		console.warn(`Unnecessary length was provided in config-string ${configString}`)
+		console.warn(`Unnecessary length was provided in config-string "${configString}"`)
 	}
 
 	// Return redy-to-use config object
