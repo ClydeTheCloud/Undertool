@@ -7,7 +7,7 @@ import vaultCheck from './utils/vault'
 // Object for storing timeOut-IDs of different Tooltips, both for close-animation and rendering
 const timeoutIds = { closedelay: {}, animation: {}, hover: {} }
 
-function useTooltip(children) {
+function useTooltip({ children, defaultConfigString = 'top opendelay1 pop3' }) {
 	const [tooltips, setTooltips] = useState({})
 
 	// useRef is used for access to current version of state inside timers.
@@ -19,7 +19,14 @@ function useTooltip(children) {
 		// Get unique for every target ID
 		const parentId = vaultCheck(event.currentTarget)
 
-		clearTimeout(timeoutIds.animation[parentId])
+		if (tooltips[parentId] && event.type === 'mouseenter') {
+			const tooltip = document.getElementById(`ttid-${parentId}`)
+			if (tooltip.style.animationName.endsWith('-close')) {
+				tooltip.style.animationName = tooltip.style.animationName.replace('-close', '')
+			}
+			clearTimeout(timeoutIds.animation[parentId])
+			return
+		}
 
 		const eventTarget = event.target
 
@@ -27,7 +34,7 @@ function useTooltip(children) {
 		const configString = event.currentTarget.getAttribute('tooltipConfig')
 		let config
 		try {
-			config = configParser(configString)
+			config = configParser(configString || defaultConfigString, event.type)
 		} catch (e) {
 			console.error('Something is wrong with your config')
 			console.error('Target is:', eventTarget)
@@ -35,9 +42,9 @@ function useTooltip(children) {
 			console.error(e)
 		}
 
-		if ((config.method === 'click' && event.type !== 'click') || (config.method === 'hover' && event.type === 'click')) {
-			throw new Error('Conflict between method of tooltip opening and event type')
-		}
+		// if ((config.method === 'click' && event.type !== 'click') || (config.method === 'hover' && event.type === 'click')) {
+		// 	throw new Error('Conflict between method of tooltip opening and event type')
+		// }
 
 		if (config.nested) {
 			// return if event happened not on the element itself
@@ -46,7 +53,7 @@ function useTooltip(children) {
 			}
 		}
 
-		if (config.method === 'click') {
+		if (event.type === 'click') {
 			// Check if tooltip associated with targeted element is on the list of active tooltips
 			if (Object.entries(tooltips).some(t => parseInt(t[0]) === parentId)) {
 				// If it is, remove this target and respective Tooltip.
@@ -55,7 +62,7 @@ function useTooltip(children) {
 			}
 		}
 
-		if (config.methodLength && event.type === 'mouseleave' && !tooltipsRef.current[parentId]) {
+		if (config.opendelay && event.type === 'mouseleave' && !tooltipsRef.current[parentId]) {
 			clearTimeout(timeoutIds.hover[parentId])
 			return
 		}
@@ -86,9 +93,8 @@ function useTooltip(children) {
 		const targetIndex = event.target.style.zIndex
 		const tooltipIndex = targetIndex ? parseInt(targetIndex) + 2 : 3
 
-		console.log(targetIndex)
-		console.log(tooltipIndex)
-
+		// console.log(targetIndex)
+		// console.log(tooltipIndex)
 		// console.log(config)
 
 		// Generate new Tooltip.
@@ -99,22 +105,24 @@ function useTooltip(children) {
 				id={event.currentTarget}
 				key={parentId}
 				parentId={parentId}
-				tooltipcontent={event.currentTarget.getAttribute('tooltipcontent')}
-				index={tooltipIndex}
+				tooltipTextContent={event.currentTarget.getAttribute('tooltipcontent')}
+				zIndex={tooltipIndex}
 				animation={config.animation || null}
 				animationLength={config.animationLength}
-				// class="test-class"
+				customClass={config.class}
+				arrow={config.arrow}
+				flip={config.flip}
 			/>
 		)
 
 		// Set timeout to adding new Tooltip to state if method in config have length...
-		if (config.methodLength) {
+		if (config.opendelay && event.type === 'mouseenter') {
 			timeoutIds.hover[parentId] = setTimeout(() => {
 				setTooltips({
 					...tooltipsRef.current,
 					[parentId]: tooltip,
 				})
-			}, config.methodLength * 500)
+			}, config.opendelayLength * 500)
 			//... or Add new Tooltip right away.
 		} else {
 			setTooltips({

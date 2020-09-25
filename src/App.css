@@ -129,7 +129,7 @@ h3 {
 .test-class {
 	background-color: violet;
 	color: #000;
-	padding: 3em;
+	padding: 2em;
 	font-size: 1.5em;
 }
 
@@ -140,37 +140,28 @@ h3 {
 	border-radius: 5px;
 }
 
-/* TODO split this CSS into modules */
-
-.tooltip-helper-class[data-popper-placement^='top'] .tooltip-arrow {
-	bottom: -4px;
+body {
+	--tooltip-arrow-size: 10px;
+	--tooltip-arrow-offset: calc(var(--tooltip-arrow-size) / 2);
 }
 
-.tooltip-helper-class[data-popper-placement^='bottom'] .tooltip-arrow {
-	top: -4px;
-}
-
-.tooltip-helper-class[data-popper-placement^='left'] .tooltip-arrow {
-	right: -4px;
-}
-
-.tooltip-helper-class[data-popper-placement^='right'] .tooltip-arrow {
-	left: -4px;
-}
-
-.tooltip-arrow,
-.tooltip-arrow::before {
+/* --------------------------------------------- */
+/* TODO remove this from CSS, implement using JS */
+.tooltip-arrow-wrapper,
+.tooltip-arrow-inner {
 	position: absolute;
-	width: 8px;
-	height: 8px;
+	width: 10px;
+	height: 10px;
 	z-index: -1;
 }
 
-.tooltip-arrow::before {
-	content: '';
+.tooltip-arrow-inner {
 	transform: rotate(45deg);
 	background: #333;
 }
+
+/* TODO remove this from CSS, implement using JS */
+/* --------------------------------------------- */
 
 /* .tooltip-arrow {
 	position: absolute;
@@ -202,7 +193,7 @@ h3 {
 @keyframes slide {
 	from {
 		opacity: 0;
-		transform: translateX(100px);
+		transform: translateX(20px);
 	}
 	to {
 		opacity: 1;
@@ -217,14 +208,14 @@ h3 {
 	}
 	to {
 		opacity: 0;
-		transform: translateX(-100px);
+		transform: translateX(-20px);
 	}
 }
 
 @keyframes pop {
 	from {
 		opacity: 0;
-		transform: translateY(100px);
+		transform: translateY(20px);
 	}
 	to {
 		opacity: 1;
@@ -239,7 +230,7 @@ h3 {
 	}
 	to {
 		opacity: 0;
-		transform: translateY(100px);
+		transform: translateY(20px);
 	}
 }
 

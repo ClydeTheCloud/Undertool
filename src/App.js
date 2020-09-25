@@ -9,11 +9,25 @@ function Test(props) {
 
 function App() {
 	const [tooltips, handler] = useTooltip({
-		thirdBox: <Test text="This is a click-tooltip with component" />,
-		seventhBox: <Test text="This is a hover-tooltip with component" />,
+		children: {
+			thirdBox: <Test text="This is a click-tooltip with component" />,
+			seventhBox: <Test text="This is a hover-tooltip with component" />,
+		},
 	})
 
+	// TODO merge opendelay and closedelay (maybe like this: delay:0-3)
 	// TODO cool presentation (with tooltips, obviously)
+	// TODO nesting logic
+	// TODO fixed/relative logic
+
+	// ----------==========########## DONE ##########==========---------
+	// default options (no 'min-config' bullshit)
+	// add all missing positioning options
+	// flip option
+	// different arrows
+
+	// ----------==========########## NOTES for presentation ##########==========---------
+	// Do not use % in border-radius of a custom tooltip class
 
 	return (
 		<>
@@ -28,19 +42,19 @@ function App() {
 				<div className="wrapper click">
 					<div
 						className="box one"
-						tooltipconfig="left click slide"
+						tooltipconfig="left slide class:test-class"
 						tooltipcontent="This is a click-tooltip from the left"
 						onClick={handler}
 					></div>
 					<div
 						className="box two"
-						tooltipconfig="top click slide"
+						tooltipconfig="top slide"
 						tooltipcontent="This is a click-tooltip from the top"
 						onClick={handler}
 					></div>
 					<div
 						className="box three center"
-						tooltipconfig="bottom click nested slide"
+						tooltipconfig="bottom nested slide"
 						tooltipcontentid="thirdBox"
 						// tooltipcontent={'This is a hover-tooltip withChild'}
 						onClick={handler}
@@ -49,7 +63,7 @@ function App() {
 					</div>
 					<div
 						className="box four"
-						tooltipconfig="right click slide"
+						tooltipconfig="right slide6 flip:on"
 						tooltipcontent="This is a click-tooltip from the right"
 						onClick={handler}
 					></div>
@@ -59,21 +73,21 @@ function App() {
 				<div className="wrapper hover">
 					<div
 						className="box one"
-						tooltipconfig="left hover2 closedelay3 scale1"
+						// tooltipconfig="left opendelay2 closedelay3 scale1"
 						tooltipcontent="This is a hover-tooltip from the left"
 						onMouseEnter={handler}
 						onMouseLeave={handler}
 					></div>
 					<div
 						className="box two"
-						tooltipconfig="top hover2 closedelay3 slide3"
+						tooltipconfig="top opendelay2 closedelay3 slide3"
 						tooltipcontent="This is a hover-tooltip from the top"
 						onMouseEnter={handler}
 						onMouseLeave={handler}
 					></div>
 					<div
 						className="box three center"
-						tooltipconfig="bottom hover2 slide6"
+						tooltipconfig="bottom opendelay2 slide6"
 						tooltipcontentid="seventhBox"
 						onMouseEnter={handler}
 						onMouseLeave={handler}
@@ -82,7 +96,7 @@ function App() {
 					</div>
 					<div
 						className="box four"
-						tooltipconfig="right hover2 slide10"
+						tooltipconfig="right opendelay2 slide10"
 						tooltipcontent="This is a hover-tooltip from the right"
 						onMouseEnter={handler}
 						onMouseLeave={handler}

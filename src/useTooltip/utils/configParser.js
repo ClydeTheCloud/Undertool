@@ -1,32 +1,34 @@
 // Prop-types and respective possible prop-values
 const possibleValues = [
-	{ position: 'top bottom left right' },
-	{ method: 'click hover' },
+	{
+		position:
+			'auto auto-start auto-end top top-start top-end bottom bottom-start bottom-end right right-start right-end left left-start left-end',
+	},
+	{ opendelay: 'opendelay' },
 	{ closedelay: 'closedelay' },
 	{ nested: 'nested' },
 	{ animation: 'fade slide pop scale' },
+	{ class: 'class:' },
+	{ arrow: 'arrow:sm arrow:md arrow:lg arrow:rd arrow:none' },
+	{ flip: 'flip:off flip:on' },
 ]
 
-function configParser(configString) {
+function configParser(configString, eventType) {
 	// Convert string into array
 	const configArray = configString.toLowerCase().trim().split(' ')
 
 	// Check and transform values in array
 	const finalConfig = check(configArray)
 
-	if (!finalConfig.method || !finalConfig.position) {
+	if (!finalConfig.position) {
 		throw new Error(
-			`Requirements for a minimal setup is not met. Make sure to provide position and method in your config-string: ${configString}`
+			`Requirements for a minimal setup are not met. Make sure to provide position in your config-string: ${configString}`
 		)
-	} else if (
-		(finalConfig.method === 'click' && finalConfig.methodLength) ||
-		finalConfig.positionLength ||
-		finalConfig.nestedLength
-	) {
+	} else if ((eventType === 'click' && finalConfig.methodLength) || finalConfig.positionLength || finalConfig.nestedLength) {
 		console.warn(`Unnecessary length was provided in config-string "${configString}"`)
 	}
 
-	// Return redy-to-use config object
+	// Return ready-to-use config object
 	return finalConfig
 }
 
@@ -36,6 +38,11 @@ function extractValuefromString(str, reverse = false) {
 	} else {
 		return str.replace(/\D/g, '')
 	}
+}
+
+function classExtractor(classString) {
+	const className = classString.substr(6)
+	return className
 }
 
 function check(array) {
@@ -67,6 +74,13 @@ function check(array) {
 				valuesConverted.push(a)
 			}
 		})
+
+		// Exception for a custom class
+		if (a.startsWith('class:')) {
+			const className = classExtractor(a)
+			values = { ...values, class: className }
+			valuesConverted.push(a)
+		}
 	})
 
 	const checkForUnknowns = array.map(v => [v, valuesConverted.some(vConverted => v === vConverted)])
