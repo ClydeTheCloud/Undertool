@@ -82,14 +82,17 @@ class Tooltip extends React.Component {
 		const body = document.getElementById(this.bodyId)
 		const paddingOffset = Number(window.getComputedStyle(body, null).borderRadius.replace(/\D/g, ''))
 		let isFlipEndbled = this.props.flip === 'flip:off' ? false : true
+		let fixedOrAbsolute = this.props.flip === 'fixed:on' ? 'fixed' : 'absolute'
+		const clipPath = this.props.clipPath || this.props.commonClipPath
 
 		createPopper(this.props.id, this.tooltipRef.current, {
 			placement: this.props.position,
 			modifiers: [
 				{ name: 'arrow', options: { padding: paddingOffset } },
 				{ name: 'offset', options: { offset: [0, 20] } },
-				{ name: 'flip', enabled: isFlipEndbled },
+				{ name: 'flip', options: { boundary: clipPath }, enabled: isFlipEndbled },
 			],
+			strategy: fixedOrAbsolute,
 		})
 
 		if (this.props.customClass) {

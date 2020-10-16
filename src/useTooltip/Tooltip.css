@@ -1,3 +1,8 @@
+.tooltip-helper-class[data-popper-reference-hidden] {
+	visibility: hidden;
+	pointer-events: none;
+}
+
 /* basic styles */
 .tooltip-helper-class[data-popper-placement^='top'] .tooltip-arrow-wrapper {
 	bottom: -5px;

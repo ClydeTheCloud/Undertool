@@ -7,7 +7,7 @@ import vaultCheck from './utils/vault'
 // Object for storing timeOut-IDs of different Tooltips, both for close-animation and rendering
 const timeoutIds = { closedelay: {}, animation: {}, hover: {} }
 
-function useTooltip({ children, defaultConfigString = 'top opendelay1 pop3' }) {
+function useTooltip({ children, defaultConfigString = 'top delay1-3 pop3', clipPaths = {}, commonClipPath }) {
 	const [tooltips, setTooltips] = useState({})
 
 	// useRef is used for access to current version of state inside timers.
@@ -62,22 +62,22 @@ function useTooltip({ children, defaultConfigString = 'top opendelay1 pop3' }) {
 			}
 		}
 
-		if (config.opendelay && event.type === 'mouseleave' && !tooltipsRef.current[parentId]) {
+		if (config.delay && event.type === 'mouseleave' && !tooltipsRef.current[parentId]) {
 			clearTimeout(timeoutIds.hover[parentId])
 			return
 		}
 
-		if (event.type === 'mouseenter' && config.closedelay) {
+		if (event.type === 'mouseenter' && config.delay) {
 			clearTimeout(timeoutIds.closedelay[parentId])
 		}
 
-		if (event.type === 'mouseleave' && !config.closedelay) {
+		if (event.type === 'mouseleave' && !config.delay) {
 			close(eventTarget, config, parentId)
 			return
-		} else if (event.type === 'mouseleave' && config.closedelay && config.closedelayLength) {
+		} else if (event.type === 'mouseleave' && config.delay && config.delay[1]) {
 			timeoutIds.closedelay[parentId] = setTimeout(() => {
 				close(eventTarget, config, parentId)
-			}, config.closedelayLength * 500)
+			}, config.delay[1] * 500)
 			return
 		}
 
@@ -96,19 +96,22 @@ function useTooltip({ children, defaultConfigString = 'top opendelay1 pop3' }) {
 		// console.log(targetIndex)
 		// console.log(tooltipIndex)
 		// console.log(config)
+		// console.log(clipPaths)
 
 		// Generate new Tooltip.
 		const tooltip = (
 			<Tooltip
 				child={tooltipContentId ? children[tooltipContentId] : null}
+				clipPath={clipPaths[tooltipContentId] ? clipPaths[tooltipContentId].current : null}
+				commonClipPath={commonClipPath}
 				position={config.position}
 				id={event.currentTarget}
 				key={parentId}
 				parentId={parentId}
 				tooltipTextContent={event.currentTarget.getAttribute('tooltipcontent')}
 				zIndex={tooltipIndex}
-				animation={config.animation || null}
-				animationLength={config.animationLength}
+				animation={config.animation[0] || null}
+				animationLength={config.animation[1] || null}
 				customClass={config.class}
 				arrow={config.arrow}
 				flip={config.flip}
@@ -116,13 +119,13 @@ function useTooltip({ children, defaultConfigString = 'top opendelay1 pop3' }) {
 		)
 
 		// Set timeout to adding new Tooltip to state if method in config have length...
-		if (config.opendelay && event.type === 'mouseenter') {
+		if (config.delay && event.type === 'mouseenter') {
 			timeoutIds.hover[parentId] = setTimeout(() => {
 				setTooltips({
 					...tooltipsRef.current,
 					[parentId]: tooltip,
 				})
-			}, config.opendelayLength * 500)
+			}, config.delay[0] * 500)
 			//... or Add new Tooltip right away.
 		} else {
 			setTooltips({
@@ -138,13 +141,13 @@ function useTooltip({ children, defaultConfigString = 'top opendelay1 pop3' }) {
 	// Function for closing Tooltips
 	function close(eventTarget, config, key) {
 		const tooltip = document.getElementById(`ttid-${key}`)
-		if (config && config.animation && tooltip) {
-			tooltip.style.animationName = config.animation.concat('-close')
+		if (config && config.animation[0] && tooltip) {
+			tooltip.style.animationName = config.animation[0].concat('-close')
 			timeoutIds.animation[key] = setTimeout(
 				() => {
 					setTooltips(Object.fromEntries(Object.entries(tooltipsRef.current).filter(t => t[1].props.id !== eventTarget)))
 				},
-				config.animationLength ? config.animationLength * 100 : 200
+				config.animation[1] ? config.animation[1] * 100 : 200
 			)
 			return
 		}

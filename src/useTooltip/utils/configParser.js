@@ -4,13 +4,13 @@ const possibleValues = [
 		position:
 			'auto auto-start auto-end top top-start top-end bottom bottom-start bottom-end right right-start right-end left left-start left-end',
 	},
-	{ opendelay: 'opendelay' },
-	{ closedelay: 'closedelay' },
 	{ nested: 'nested' },
 	{ animation: 'fade slide pop scale' },
 	{ class: 'class:' },
 	{ arrow: 'arrow:sm arrow:md arrow:lg arrow:rd arrow:none' },
 	{ flip: 'flip:off flip:on' },
+	{ fixed: 'fixed:off fixed:on' },
+	{ delay: 'delay' },
 ]
 
 function configParser(configString, eventType) {
@@ -45,7 +45,17 @@ function classExtractor(classString) {
 	return className
 }
 
+function delayExctractor(delayString) {
+	const delay = delayString.substr(5)
+	if (delay.match(/(\d+-\d+)/)) {
+		return delay.split('-')
+	} else {
+		return [delay, delay]
+	}
+}
+
 function check(array) {
+	// console.log(array)
 	let values = {}
 	// Additional values-object for tracking if all entries from incoming array is converted
 	const valuesConverted = []
@@ -56,32 +66,34 @@ function check(array) {
 		possibleValues.forEach(b => {
 			const [[bKey, bValue]] = Object.entries(b)
 			// Check if prop-value (stripped of number at the end with RegExp) is found in 'possible-values' array...
-			if (bValue.includes(extractValuefromString(a, true))) {
+			if (bValue.split(' ').some(bVal => extractValuefromString(a, true).includes(bVal))) {
 				// Check for props of the same type (e.g. 'top' and 'left'), if found - throw an error.
 				if (values.hasOwnProperty(bKey)) {
 					throw new Error(`Found conflicting property values: value ${a} and value ${values[bKey]} of property ${bKey}`)
 				}
 				// ...and add found prop-types and prop-values to value array (if there's number at the end, split it into two different props (e.g. animation & animationLength  ))
-				if (a.match(/\d$/)) {
+				if (bKey === 'animation') {
 					values = {
 						...values,
-						[bKey]: extractValuefromString(a, true),
-						[`${bKey}Length`]: extractValuefromString(a),
+						animation: [extractValuefromString(a, true), extractValuefromString(a)],
+						// [bKey]: extractValuefromString(a, true),
+						// [`${bKey}Length`]: extractValuefromString(a),
 					}
+					valuesConverted.push(a)
+				} else if (bKey === 'class') {
+					values = { ...values, class: classExtractor(a) }
+					valuesConverted.push(a)
+				} else if (bKey === 'delay') {
+					values = { ...values, delay: delayExctractor(a) }
+					valuesConverted.push(a)
 				} else {
 					values = { ...values, [bKey]: a }
+					valuesConverted.push(a)
 				}
-				valuesConverted.push(a)
 			}
 		})
-
-		// Exception for a custom class
-		if (a.startsWith('class:')) {
-			const className = classExtractor(a)
-			values = { ...values, class: className }
-			valuesConverted.push(a)
-		}
 	})
+	// console.log(valuesConverted)
 
 	const checkForUnknowns = array.map(v => [v, valuesConverted.some(vConverted => v === vConverted)])
 	checkForUnknowns.forEach(e => {
@@ -89,6 +101,7 @@ function check(array) {
 			throw new Error(`Unknown config value: ${e[0]}`)
 		}
 	})
+	// console.log(checkForUnknowns)
 
 	return values
 }
