@@ -24,15 +24,16 @@ function App() {
 	}, [])
 
 	// TODO cool presentation (with tooltips, obviously)
-	// TODO nesting logic
-	// TODO Single-tooltip-at-a-time option (out of all tooltips or out of specific set)
-	// TODO autoclose on mouseleave event
-	// TODO click on empty space to close a tooltip(uncaptured click event?)
-	// TODO fix bubbling and capturing
-	// TODO explicit no-animation option (and other options lika that)
-	// TODO refactor attributes into data-properties
+	// TODO autoclose on mouseleave event (from tooltip itself, not anchor element)
+	// TODO click on empty space to close a tooltip(uncaptured click event?) || option to click on empty space to close tooltip
+	// TODO explicit no-animation option (and other options like that)
+	// TODO ability to merge common and specific configs instead of overwriting
 
 	// ----------==========########## DONE ##########==========---------
+	// Single-tooltip-at-a-time option (out of all tooltips or out of specific set) || single-tooltip option
+	// refactor attributes into data-properties
+	// fix bubbling and capturing
+	// nesting logic(removed it, made it the other way)
 	// fixed/relative logic
 	// clipping boundary (set by user)
 	// animation prop in config (refactor to be like delay prop(array of animation name and animation length))
