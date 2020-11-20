@@ -8,22 +8,22 @@ function Hover({ handler }) {
 			<div className="wrapper hover">
 				<div
 					className="box one"
-					// tooltipconfig="left delay2-3 scale7"
-					tooltipcontent="This is a hover-tooltip from the left"
+					data-tooltip-config="left delay2-3 scale7"
+					data-tooltip-content="This is a hover-tooltip from the left"
 					onMouseEnter={handler}
 					onMouseLeave={handler}
 				></div>
 				<div
 					className="box two"
-					tooltipconfig="top delay0-3 slide3"
-					tooltipcontent="This is a hover-tooltip from the top"
+					data-tooltip-config="top delay0-3 slide3"
+					data-tooltip-content="This is a hover-tooltip from the top"
 					onMouseEnter={handler}
 					onMouseLeave={handler}
 				></div>
 				<div
 					className="box three center"
-					tooltipconfig="bottom delay2 slide6"
-					tooltipcontentid="seventhBox"
+					data-tooltip-config="bottom delay2 slide6"
+					data-tooltip-content-id="seventhBox"
 					onMouseEnter={handler}
 					onMouseLeave={handler}
 				>
@@ -31,8 +31,8 @@ function Hover({ handler }) {
 				</div>
 				<div
 					className="box four"
-					tooltipconfig="right slide10"
-					tooltipcontent="This is a hover-tooltip from the right"
+					data-tooltip-config="right slide10"
+					data-tooltip-content="This is a hover-tooltip from the right"
 					onMouseEnter={handler}
 					onMouseLeave={handler}
 				></div>

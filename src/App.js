@@ -6,6 +6,7 @@ import Click from './Components/Sections/Click'
 import Test from './Components/InnerComponent'
 import Hover from './Components/Sections/Hover'
 import Scroll from './Components/Sections/Scroll'
+import Introduction from './Components/Sections_new/Introduction'
 
 function App() {
 	const scrollRef = useRef()
@@ -20,16 +21,16 @@ function App() {
 	})
 
 	useEffect(() => {
-		scrollRef.current = document.querySelector('.scroller-outer')
+		// scrollRef.current = document.querySelector('.scroller-outer')
+		// document.querySelector('.scroller-inner > .box').click()
 	}, [])
 
 	// TODO cool presentation (with tooltips, obviously)
 	// TODO autoclose on mouseleave event (from tooltip itself, not anchor element)
-	// TODO click on empty space to close a tooltip(uncaptured click event?) || option to click on empty space to close tooltip
-	// TODO explicit no-animation option (and other options like that)
-	// TODO ability to merge common and specific configs instead of overwriting
 
 	// ----------==========########## DONE ##########==========---------
+	// explicit no-animation option (and other options like that)
+	// ability to merge common and specific configs instead of overwriting
 	// Single-tooltip-at-a-time option (out of all tooltips or out of specific set) || single-tooltip option
 	// refactor attributes into data-properties
 	// fix bubbling and capturing
@@ -44,6 +45,9 @@ function App() {
 	// flip option
 	// different arrows
 
+	// ----------==========########## CAN'T DO ##########==========---------
+	// click on empty space to close a tooltip(uncaptured click event?) || option to click on empty space to close tooltip
+
 	// ----------==========########## NOTES for presentation ##########==========---------
 	// Do not use % in border-radius of a custom tooltip class
 	// useRef and useEffect for a toolip clip-path
@@ -52,16 +56,18 @@ function App() {
 		<>
 			{tooltips}
 			<header>
-				<h1>dke's TOOLTIP</h1>
+				<h1>Undertool</h1>
 			</header>
 
+			<Introduction />
+			{/* 
 			<div className="grid">
 				<Click handler={handler} />
 
 				<Hover handler={handler} />
 
 				<Scroll handler={handler} />
-			</div>
+			</div> */}
 		</>
 	)
 }

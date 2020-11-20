@@ -8,10 +8,10 @@ class Tooltip extends React.Component {
 	constructor(props) {
 		super(props)
 		this.tooltipRef = React.createRef()
-		this.wrapperId = `ttid-${this.props.parentId}`
-		this.bodyId = `ttid-${this.props.parentId}-body`
-		this.arrowId = `ttid-${this.props.parentId}-arrow`
-		this.arrowWrapperId = `ttid-${this.props.parentId}-arrow-wrapper`
+		this.wrapperId = `ttid-${this.props.identifier}`
+		this.bodyId = `ttid-${this.props.identifier}-body`
+		this.arrowId = `ttid-${this.props.identifier}-arrow`
+		this.arrowWrapperId = `ttid-${this.props.identifier}-arrow-wrapper`
 	}
 
 	setArrow() {
@@ -67,6 +67,7 @@ class Tooltip extends React.Component {
 			animationName: this.props.animation,
 			animationDuration: this.props.animationLength ? `${this.props.animationLength * 0.1}s` : '0.2s',
 			animationFillMode: 'forwards',
+			maxWidth: this.props.maxWidth,
 		},
 
 		tooltipContent: {
@@ -78,26 +79,42 @@ class Tooltip extends React.Component {
 		},
 	}
 
+	generateMagnet() {
+		return () => ({
+			width: 0,
+			height: 0,
+			top: this.props.magnetCoordinates.y,
+			right: this.props.magnetCoordinates.x,
+			bottom: this.props.magnetCoordinates.y,
+			left: this.props.magnetCoordinates.x,
+		})
+	}
+
 	componentDidMount() {
 		const body = document.getElementById(this.bodyId)
 		const paddingOffset = Number(window.getComputedStyle(body, null).borderRadius.replace(/\D/g, ''))
-		let isFlipEndbled = this.props.flip === 'flip:off' ? false : true
-		let fixedOrAbsolute = this.props.flip === 'fixed:on' ? 'fixed' : 'absolute'
+		let fixedOrAbsolute = this.props.fixed ? 'fixed' : 'absolute'
 		const clipPath = this.props.clipPath || this.props.commonClipPath
 
-		createPopper(this.props.id, this.tooltipRef.current, {
+		const virtualElement = { getBoundingClientRect: this.generateMagnet() }
+
+		const anchor = this.props.magnet ? virtualElement : this.props.anchor
+
+		createPopper(anchor, this.tooltipRef.current, {
 			placement: this.props.position,
 			modifiers: [
 				{ name: 'arrow', options: { padding: paddingOffset } },
 				{ name: 'offset', options: { offset: [0, 20] } },
-				{ name: 'flip', options: { boundary: clipPath }, enabled: isFlipEndbled },
+				{ name: 'flip', options: { boundary: clipPath }, enabled: this.props.flip },
 			],
 			strategy: fixedOrAbsolute,
 		})
 
 		if (this.props.customClass) {
 			const bg = window.getComputedStyle(body, null).backgroundColor
+			const border = window.getComputedStyle(body, null).borderColor
 			document.getElementById(this.arrowId).style.backgroundColor = bg
+			document.getElementById(this.arrowId).style.borderColor = border
 		}
 
 		if (this.props.arrow) {
@@ -107,13 +124,13 @@ class Tooltip extends React.Component {
 
 	render() {
 		return (
-			<div ref={this.tooltipRef} className={'tooltip-helper-class'}>
+			<div ref={this.tooltipRef} className={'tooltip-helper-class'} onClick={e => (e.nativeEvent.fired = true)}>
 				<div style={this.styles.tooltipWrapper} id={this.wrapperId}>
 					<div
 						id={this.bodyId}
 						style={this.styles.tooltipBody}
 						className={`${this.props.customClass || 'tooltip-default-style'} `}
-						key={this.props.parentId}
+						key={this.props.identifier}
 					>
 						<div style={this.styles.tooltipContent}>
 							{this.props.child || this.props.tooltipTextContent}

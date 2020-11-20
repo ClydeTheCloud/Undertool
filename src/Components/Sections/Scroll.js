@@ -10,8 +10,8 @@ function Hover({ handler }) {
 					<div className="scroller-inner">
 						<div
 							className="box one"
-							tooltipcontent="This section is about scroll"
-							tooltipcontentid="scrollBox"
+							data-tooltip-content="This section is about scroll"
+							data-tooltip-content-id="scrollBox"
 							onClick={handler}
 						></div>
 					</div>
