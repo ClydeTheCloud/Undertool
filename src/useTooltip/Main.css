@@ -15,7 +15,7 @@
 
 /* --------------------------------------------- */
 /* TODO remove this from CSS, implement using JS */
-.tooltip-arrow-wrapper,
+/* .tooltip-arrow-wrapper,
 .tooltip-arrow-inner {
 	position: absolute;
 	width: 10px;
@@ -26,7 +26,7 @@
 .tooltip-arrow-inner {
 	transform: rotate(45deg);
 	background: #333;
-}
+} */
 
 /* TODO remove this from CSS, implement using JS */
 /* --------------------------------------------- */

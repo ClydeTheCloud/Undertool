@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import { useEffect } from 'react'
 
 import './Main.css'
 import Tooltip from './Tooltip'
@@ -7,8 +8,7 @@ import vaultCheck from './utils/vault'
 
 // Object for storing timeOut-IDs of different Tooltips, both for close-animation and rendering
 const timeoutIds = { closedelay: {}, animation: {}, hover: {} }
-// const configs = {}
-const globalStorage = []
+let globalStorage = []
 const outerGlobalOptions = {}
 const fallBackConfig = 'top delay1-3 pop3'
 
@@ -54,6 +54,7 @@ function useTooltip({ children, defaultConfigString, clipPaths = {}, commonClipP
 
 		// Get unique ID based on config or target element
 		const identifier = vaultCheck(config.group || targetElement)
+		console.log(identifier)
 
 		///////////////////////////////////////////////////////////////////////////////////////////
 		function stopAnimation(identifier) {
@@ -73,7 +74,7 @@ function useTooltip({ children, defaultConfigString, clipPaths = {}, commonClipP
 			// Check if tooltip associated with targeted element is on the list of active tooltips
 			if (Object.entries(tooltips).some(t => parseInt(t[0]) === identifier)) {
 				// If it is, remove this target and respective Tooltip.
-				close(identifier, config, targetElement)
+				close(identifier, config, tooltipsRef.current, setTooltips)
 				return
 			}
 		}
@@ -88,11 +89,11 @@ function useTooltip({ children, defaultConfigString, clipPaths = {}, commonClipP
 		}
 
 		if (event.type === 'mouseleave' && !config.delay) {
-			close(identifier, config, targetElement)
+			close(identifier, config, tooltipsRef.current, setTooltips)
 			return
 		} else if (event.type === 'mouseleave' && config.delay && config.delay[1]) {
 			timeoutIds.closedelay[identifier] = setTimeout(() => {
-				close(identifier, config, targetElement)
+				close(identifier, config, tooltipsRef.current, setTooltips)
 			}, config.delay[1] * 500)
 			return
 		}
@@ -104,13 +105,11 @@ function useTooltip({ children, defaultConfigString, clipPaths = {}, commonClipP
 			closeAll(true)
 		}
 
-		console.log(config)
-
 		// Generate new Tooltip.
 		const tooltip = (
 			<Tooltip
-				child={data.contentId ? children[data.contentId] : null}
-				clipPath={clipPaths[data.contentId] ? clipPaths[data.contentId].current : null}
+				child={data.contentId ? children[data.contentId] : undefined}
+				clipPath={clipPaths[data.contentId] ? clipPaths[data.contentId].current : undefined}
 				commonClipPath={commonClipPath}
 				position={config.position}
 				anchor={targetElement}
@@ -118,14 +117,15 @@ function useTooltip({ children, defaultConfigString, clipPaths = {}, commonClipP
 				identifier={identifier}
 				tooltipTextContent={data.content}
 				zIndex={tooltipIndex}
-				animation={config.animation[0] || null}
-				animationLength={config.animation[1] || null}
+				animation={config.animation ? config.animation[0] : undefined}
+				animationLength={config.animation ? config.animation[1] : undefined}
 				customClass={config.class}
 				arrow={config.arrow}
 				flip={config.flip ? config.flip : true}
 				magnet={config.magnet}
 				magnetCoordinates={{ x: event.clientX, y: event.clientY }}
 				maxWidth={config.maxw}
+				close={close}
 			/>
 		)
 
@@ -153,29 +153,32 @@ function useTooltip({ children, defaultConfigString, clipPaths = {}, commonClipP
 	////////////////////////////////////////////////////////////////////////////////////// tragetElement and filtering when closing
 
 	// Function for closing Tooltips
-	function close(identifier, config, anchor) {
+	function close(identifier, config) {
 		const tooltip = document.getElementById(`ttid-${identifier}`)
-		if (config && config.animation[0] && tooltip) {
+		if (config.animation && config.animation[0] && tooltip) {
 			tooltip.style.animationName = config.animation[0].concat('-close')
 			timeoutIds.animation[identifier] = setTimeout(
 				() => {
 					setTooltips(
 						Object.fromEntries(Object.entries(tooltipsRef.current).filter(t => t[1].props.identifier !== identifier))
 					)
-					// configs[identifier] = null
 				},
 				config.animation[1] ? config.animation[1] * 100 : 200
 			)
-			globalStorage.filter(tt => tt.props.anchor !== anchor)
+			globalStorage = globalStorage.filter(tt => tt.props.identifier !== identifier)
 			return
 		}
-		setTooltips(Object.fromEntries(Object.entries(tooltipsRef.current).filter(t => t[1].props.identifier !== identifier)))
+		setTooltips(Object.fromEntries(Object.entries(tooltips).filter(t => t[1].props.identifier !== identifier)))
 		// configs[identifier] = null
 	}
 
 	function closeAll(global) {
+		console.log(globalStorage)
 		;(global ? globalStorage : allTooltips).forEach(tt => {
-			close(tt.props.identifier, { animation: [tt.props.animation, tt.props.animationLength] })
+			tt.props.close(tt.props.identifier, { animation: [tt.props.animation, tt.props.animationLength] })
+			// globalStateStorage.forEach(close =>
+			// 	close(tt.props.identifier, { animation: [tt.props.animation, tt.props.animationLength] })
+			// )
 		})
 	}
 

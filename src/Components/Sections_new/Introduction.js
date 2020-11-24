@@ -1,64 +1,60 @@
 import React from 'react'
-import useTooltip from '../../useTooltip/useTooltip'
 import { Prism as Highlight } from 'react-syntax-highlighter'
 import { materialOceanic } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
-const introCode = `
-function Example() {
-	const [tooltips, handler] = useTooltip({})
+import { Example, exampleCode, FineTune, finetuneCode, CloseAll, closeAllCode } from '../code_snippets'
 
-	return (
-		<div>
-			<div className="box one" onClick={handler} data-tooltip-content="Put your text here"></div>
-			{tooltips}
-		</div>
-	)
-}
-`
-
-function Intro({ handler }) {
+function Intro() {
 	return (
 		<>
 			<h3 className="row-header click">Introduction</h3>
-			{/* <div className="code click">CODE FOR CLICK GOES HERE</div> */}
 			<div className="intro-wrapper">
-				<p>Undertool is multi-tooltip instrument.</p>
+				<p>Undertool is multi-tooltip instrument for React powered by Popperjs.</p>
 				<p>Easy to use.</p>
 				<Highlight language="javascript" style={materialOceanic}>
-					const [tooltips, handler] = useTooltip({})
+					{'const [tooltips, handler] = useTooltip({})'}
 				</Highlight>
-				<p>Put tooltips anywhere on in your component and it will render all tooltips.</p>
-				<p>Use universal handler to manage click and hover events.</p>
+				<p>
+					Put <code className="inline-code">tooltips</code> anywhere in your component and it will render all tooltips.
+				</p>
+				<p>
+					Use universal <code className="inline-code">handler</code> to manage click and hover events.
+				</p>
 				<p>Undertool works out of the box with minimal configuration.</p>
 				<p>
-					Undertool has an fall-back config, so if you're lazy like me, you can just throw handler and data-tooltip-content
-					and call it a day!
+					Undertool has an fall-back config, so if you're lazy like me, you can just throw handler and{' '}
+					<code className="inline-code">data-tooltip-content</code> on an element and call it a day!
 				</p>
-
 				<Highlight language="javascript" style={materialOceanic}>
-					{introCode}
+					{exampleCode}
 				</Highlight>
-
 				<p>Here how it looks on page, click on a square below to open tooltip.</p>
 				<div className="box-wrapper">
 					<Example />
 				</div>
-
 				<p>However, if you want to finetune behavior and appearance, you can provide data-tooltip-config attribute:</p>
+				<Highlight language="javascript" style={materialOceanic}>
+					{finetuneCode}
+				</Highlight>
+				<p>Here is the result:</p>
+				<div className="box-wrapper">
+					<FineTune />
+				</div>
+				<p>
+					There is a third item returned to you by calling <code className="inline-code">useTooltip({})</code>, and that is
+					special function that is able to close all open tooltips on page. By default it closes all tooltips of the same
+					instnace of <code className="inline-code">useTooltip({})</code>, but if you call it with{' '}
+					<code className="inline-code">true</code> argument, it will close all tooltips of all instnances.
+				</p>
+				<Highlight language="javascript" style={materialOceanic}>
+					{closeAllCode}
+				</Highlight>
+				<div className="wrapper">
+					<CloseAll />
+				</div>
 			</div>
 		</>
 	)
 }
 
 export default Intro
-
-function Example() {
-	const [tooltips, handler] = useTooltip({})
-
-	return (
-		<div>
-			<div className="box four" onClick={handler} data-tooltip-content="Put your text here"></div>
-			{tooltips}
-		</div>
-	)
-}

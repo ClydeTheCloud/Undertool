@@ -7,6 +7,8 @@ import Test from './Components/InnerComponent'
 import Hover from './Components/Sections/Hover'
 import Scroll from './Components/Sections/Scroll'
 import Introduction from './Components/Sections_new/Introduction'
+import Content from './Components/Sections_new/Content'
+import Configuration from './Components/Sections_new/Configuration'
 
 function App() {
 	const scrollRef = useRef()
@@ -26,6 +28,7 @@ function App() {
 	}, [])
 
 	// TODO cool presentation (with tooltips, obviously)
+	// TODO fix arrows
 	// TODO autoclose on mouseleave event (from tooltip itself, not anchor element)
 
 	// ----------==========########## DONE ##########==========---------
@@ -60,14 +63,8 @@ function App() {
 			</header>
 
 			<Introduction />
-			{/* 
-			<div className="grid">
-				<Click handler={handler} />
-
-				<Hover handler={handler} />
-
-				<Scroll handler={handler} />
-			</div> */}
+			<Content />
+			<Configuration />
 		</>
 	)
 }

@@ -2,6 +2,10 @@
 
 * {
 	font-family: 'Exo 2', sans-serif;
+	/* font-weight: 300; */
+}
+
+p {
 	font-weight: 300;
 }
 
@@ -91,6 +95,7 @@ h1 {
 	/* border: black 1px solid; */
 	border-radius: 5px;
 	margin: 2em;
+	display: inline-block;
 }
 
 .one {
@@ -173,17 +178,10 @@ h3 {
 	font-size: 1.5em;
 }
 
-.tooltip-default-style {
-	padding: 15px;
-	background-color: #333;
-	color: white;
-	border-radius: 5px;
-}
-
-body {
+/* body {
 	--tooltip-arrow-size: 10px;
-	--tooltip-arrow-offset: calc(var(--tooltip-arrow-size) / 2);
-}
+	--tooltip-arrow-offset: calc(var(--tooltip-arrow-size) * 14.14213562373095);
+} */
 
 /* --------------------------------------------- */
 /* TODO remove this from CSS, implement using JS */
@@ -223,4 +221,85 @@ body {
 	max-width: 250px;
 	margin: 0 auto;
 	padding: 35px;
+}
+
+.row {
+	max-width: 750px;
+}
+
+.inline-code {
+	background-color: rgb(38, 50, 56);
+	color: rgb(195, 206, 227);
+	padding: 0 5px;
+}
+
+.fancy-tooltip-class {
+	/* border-radius: 5px; */
+	background-color: tomato;
+	color: #032030;
+	padding: 1em;
+}
+
+.flex-center {
+	display: flex;
+	justify-content: space-between;
+}
+
+.w100 {
+	width: 100%;
+}
+
+.divider {
+	margin: 0 auto;
+	width: 85%;
+	height: 1px;
+	background-color: #999;
+}
+
+.possible-description {
+	font-weight: 500;
+}
+
+.possible-description,
+.possible-options,
+.possible-title {
+	padding: 0.5em;
+}
+
+.possible-item {
+	text-align: center;
+	background-color: #eee;
+	display: flex;
+	margin-bottom: 1em;
+}
+
+.possible-title {
+	font-weight: 700;
+	font-size: 2em;
+}
+
+.possible-options {
+	display: flex;
+	align-items: center;
+
+	background-color: #ede;
+	padding: 0.5em;
+	margin: 0.5em;
+	width: 35%;
+}
+
+.possible-info {
+	width: 65%;
+	padding: 0.5em;
+	margin: 0.5em;
+}
+
+.possible-list {
+	margin: 0 auto;
+	list-style: circle;
+}
+
+.possible-list > li {
+	text-align: left;
+	padding: 0.15em 0;
 }

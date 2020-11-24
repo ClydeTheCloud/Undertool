@@ -77,6 +77,18 @@ class Tooltip extends React.Component {
 			justifyContent: 'center',
 			alignItems: 'center',
 		},
+
+		tooltipArrowWrapper: {
+			position: 'absolute',
+			width: '10px',
+			height: '10px',
+			zIndex: 5,
+		},
+
+		tooltipArrowInner: {
+			transform: 'rotate(45deg)',
+			background: '#333',
+		},
 	}
 
 	generateMagnet() {
@@ -91,21 +103,50 @@ class Tooltip extends React.Component {
 	}
 
 	componentDidMount() {
+		const offset = [0, 20]
 		const body = document.getElementById(this.bodyId)
-		const paddingOffset = Number(window.getComputedStyle(body, null).borderRadius.replace(/\D/g, ''))
+		let paddingOffset = Number(window.getComputedStyle(body, null).borderRadius.replace(/\D/g, ''))
 		let fixedOrAbsolute = this.props.fixed ? 'fixed' : 'absolute'
 		const clipPath = this.props.clipPath || this.props.commonClipPath
 
-		const virtualElement = { getBoundingClientRect: this.generateMagnet() }
+		if (paddingOffset === 0) {
+			const arrowWrapper = document.getElementById(this.arrowWrapperId)
+			const wrapperWidth = parseInt(window.getComputedStyle(arrowWrapper, null).width)
+			paddingOffset = (wrapperWidth * 1.414213562373095 - wrapperWidth) / 2
+		}
 
-		const anchor = this.props.magnet ? virtualElement : this.props.anchor
+		const magnet = { x: this.props.magnetCoordinates.x, y: this.props.magnetCoordinates.y }
+		const rect = this.props.anchor.getBoundingClientRect()
+		const magnetOffsets = { x: magnet.x - rect.x, y: magnet.y - rect.y }
 
-		createPopper(anchor, this.tooltipRef.current, {
+		const magnetStep1 = {
+			name: 'magnetStep1',
+			enabled: Boolean(this.props.magnet),
+			phase: 'beforeRead',
+			fn({ state }) {
+				state.rects.reference.height = 0
+				state.rects.reference.width = 0
+			},
+		}
+		const magnetStep2 = {
+			name: 'magnetStep2',
+			enabled: Boolean(this.props.magnet),
+			phase: 'main',
+			fn({ state }) {
+				state.modifiersData.popperOffsets.x += magnetOffsets.x
+				state.modifiersData.popperOffsets.y += magnetOffsets.y
+			},
+		}
+
+		createPopper(this.props.anchor, this.tooltipRef.current, {
 			placement: this.props.position,
 			modifiers: [
 				{ name: 'arrow', options: { padding: paddingOffset } },
-				{ name: 'offset', options: { offset: [0, 20] } },
+				{ name: 'offset', options: { offset } },
 				{ name: 'flip', options: { boundary: clipPath }, enabled: this.props.flip },
+				{ name: 'popperOffset', data: { x: 50, y: 50 } },
+				magnetStep1,
+				magnetStep2,
 			],
 			strategy: fixedOrAbsolute,
 		})
@@ -124,7 +165,12 @@ class Tooltip extends React.Component {
 
 	render() {
 		return (
-			<div ref={this.tooltipRef} className={'tooltip-helper-class'} onClick={e => (e.nativeEvent.fired = true)}>
+			<div
+				ref={this.tooltipRef}
+				style={{ zIndex: 55 }}
+				className={'tooltip-helper-class'}
+				onClick={e => (e.nativeEvent.fired = true)}
+			>
 				<div style={this.styles.tooltipWrapper} id={this.wrapperId}>
 					<div
 						id={this.bodyId}
@@ -137,8 +183,13 @@ class Tooltip extends React.Component {
 							{/* {this.setTimer()} */}
 						</div>
 					</div>
-					<div className="tooltip-arrow-wrapper" id={this.arrowWrapperId} data-popper-arrow>
-						<div className="tooltip-arrow-inner" id={this.arrowId}></div>
+					<div
+						style={this.styles.tooltipArrowWrapper}
+						className="tooltip-arrow-wrapper"
+						id={this.arrowWrapperId}
+						data-popper-arrow
+					>
+						<div style={{ ...this.styles.tooltipArrowWrapper, ...this.styles.tooltipArrowInner }} id={this.arrowId}></div>
 					</div>
 				</div>
 			</div>
