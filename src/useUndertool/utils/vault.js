@@ -9,7 +9,6 @@ function vaultCheck(item) {
 		vault[currentId] = item
 		return currentId
 	}
-	console.log(vault)
 	return parseInt(entry[0])
 }
 

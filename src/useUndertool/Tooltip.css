@@ -1,74 +1,67 @@
+@import url(./Animations.css);
+
+.tooltip-default-style {
+	padding: 15px;
+	background-color: #333;
+	color: white;
+	border-radius: 5px;
+	text-align: center;
+}
+
 .tooltip-helper-class[data-popper-reference-hidden] {
 	visibility: hidden;
 	pointer-events: none;
 }
 
-/* basic styles */
-.tooltip-helper-class[data-popper-placement^='top'] .tooltip-arrow-wrapper {
-	bottom: -5px;
-}
-
-.tooltip-helper-class[data-popper-placement^='bottom'] .tooltip-arrow-wrapper {
-	top: -5px;
-}
-
-.tooltip-helper-class[data-popper-placement^='left'] .tooltip-arrow-wrapper {
-	right: -5px;
-}
-
-.tooltip-helper-class[data-popper-placement^='right'] .tooltip-arrow-wrapper {
-	left: -5px;
-}
-
 /* sm - small set */
 .tooltip-helper-class[data-popper-placement^='top'] .tooltip-arrow-wrapper-sm {
-	bottom: -5px;
+	bottom: -7px;
 }
 
 .tooltip-helper-class[data-popper-placement^='bottom'] .tooltip-arrow-wrapper-sm {
-	top: -5px;
+	top: -7px;
 }
 
 .tooltip-helper-class[data-popper-placement^='left'] .tooltip-arrow-wrapper-sm {
-	right: -5px;
+	right: -7px;
 }
 
 .tooltip-helper-class[data-popper-placement^='right'] .tooltip-arrow-wrapper-sm {
-	left: -5px;
+	left: -7px;
 }
 
 /* md - medium set */
 .tooltip-helper-class[data-popper-placement^='top'] .tooltip-arrow-wrapper-md {
-	bottom: -10px;
+	bottom: -14px;
 }
 
 .tooltip-helper-class[data-popper-placement^='bottom'] .tooltip-arrow-wrapper-md {
-	top: -10px;
+	top: -14px;
 }
 
 .tooltip-helper-class[data-popper-placement^='left'] .tooltip-arrow-wrapper-md {
-	right: -10px;
+	right: -14px;
 }
 
 .tooltip-helper-class[data-popper-placement^='right'] .tooltip-arrow-wrapper-md {
-	left: -10px;
+	left: -14px;
 }
 
 /* lg - large set */
 .tooltip-helper-class[data-popper-placement^='top'] .tooltip-arrow-wrapper-lg {
-	bottom: -15px;
+	bottom: -21px;
 }
 
 .tooltip-helper-class[data-popper-placement^='bottom'] .tooltip-arrow-wrapper-lg {
-	top: -15px;
+	top: -21px;
 }
 
 .tooltip-helper-class[data-popper-placement^='left'] .tooltip-arrow-wrapper-lg {
-	right: -15px;
+	right: -21px;
 }
 
 .tooltip-helper-class[data-popper-placement^='right'] .tooltip-arrow-wrapper-lg {
-	left: -15px;
+	left: -21px;
 }
 
 /* rd - round set */

@@ -1,21 +1,18 @@
 import React, { useState, useRef } from 'react'
-import { useEffect } from 'react'
 
-import './Main.css'
 import Tooltip from './Tooltip'
 import configParser, { mergeConfigs } from './utils/configParser'
 import vaultCheck from './utils/vault'
 
-// Object for storing timeOut-IDs of different Tooltips, both for close-animation and rendering
 const timeoutIds = { closedelay: {}, animation: {}, hover: {} }
 let globalStorage = []
-const outerGlobalOptions = {}
+let globalSingleStorage = false
 const fallBackConfig = 'top delay1-3 pop3'
 
-function useTooltip({ children, defaultConfigString, clipPaths = {}, commonClipPath, globalOptions = { single: false } }) {
+function useUndertool(options = {}) {
 	const [tooltips, setTooltips] = useState({})
-	if (!outerGlobalOptions.single && globalOptions.single) {
-		outerGlobalOptions.single = globalOptions.single
+	if (!globalSingleStorage && options.globalSingle) {
+		globalSingleStorage = options.globalSingle
 	}
 
 	// useRef is used to access current version of state inside timers.
@@ -26,7 +23,6 @@ function useTooltip({ children, defaultConfigString, clipPaths = {}, commonClipP
 	const tooltipEventHandler = event => {
 		// nativeEvent.fired is used to determine if event had already fired on any other element
 		if (event.nativeEvent.fired) {
-			console.log('prevented!')
 			return
 		} else {
 			event.nativeEvent.fired = true
@@ -42,32 +38,25 @@ function useTooltip({ children, defaultConfigString, clipPaths = {}, commonClipP
 
 		let config
 
-		if (!data.configString && !defaultConfigString) {
+		if (!data.configString && !options.defaultConfigString) {
 			config = configParser(fallBackConfig, event.type, targetElement)
-		} else if (data.configString && !defaultConfigString) {
+		} else if (data.configString && !options.defaultConfigString) {
 			config = configParser(data.configString, event.type, targetElement)
-		} else if (!data.configString && defaultConfigString) {
-			config = configParser(defaultConfigString, event.type, targetElement)
+		} else if (!data.configString && options.defaultConfigString) {
+			config = configParser(options.defaultConfigString, event.type, targetElement)
 		} else {
-			config = mergeConfigs(data.configString, defaultConfigString, event.type, targetElement)
+			config = mergeConfigs(data.configString, options.defaultConfigString, event.type, targetElement)
 		}
 
 		// Get unique ID based on config or target element
 		const identifier = vaultCheck(config.group || targetElement)
-		console.log(identifier)
 
-		///////////////////////////////////////////////////////////////////////////////////////////
 		function stopAnimation(identifier) {
 			const tooltip = document.getElementById(`ttid-${identifier}`)
 			if (tooltip.style.animationName.endsWith('-close')) {
 				tooltip.style.animationName = tooltip.style.animationName.replace('-close', '')
 			}
 			clearTimeout(timeoutIds.animation[identifier])
-		}
-
-		if (tooltips[identifier] && event.type === 'mouseenter') {
-			stopAnimation(identifier)
-			// return
 		}
 
 		if (event.type === 'click') {
@@ -79,38 +68,54 @@ function useTooltip({ children, defaultConfigString, clipPaths = {}, commonClipP
 			}
 		}
 
-		if (config.delay && event.type === 'mouseleave' && !tooltipsRef.current[identifier]) {
-			clearTimeout(timeoutIds.hover[identifier])
-			return
-		}
+		function manageHover(type) {
+			if (tooltips[identifier] && type === 'mouseenter') {
+				stopAnimation(identifier)
+			}
 
-		if (event.type === 'mouseenter' && config.delay) {
-			clearTimeout(timeoutIds.closedelay[identifier])
-		}
+			if (config.delay && type === 'mouseleave' && !tooltipsRef.current[identifier]) {
+				clearTimeout(timeoutIds.hover[identifier])
+				return
+			}
 
-		if (event.type === 'mouseleave' && !config.delay) {
-			close(identifier, config, tooltipsRef.current, setTooltips)
-			return
-		} else if (event.type === 'mouseleave' && config.delay && config.delay[1]) {
-			timeoutIds.closedelay[identifier] = setTimeout(() => {
+			if (type === 'mouseenter' && config.delay) {
+				clearTimeout(timeoutIds.closedelay[identifier])
+			}
+
+			if (type === 'mouseleave' && !config.delay) {
 				close(identifier, config, tooltipsRef.current, setTooltips)
-			}, config.delay[1] * 500)
+				return
+			} else if (type === 'mouseleave' && config.delay) {
+				timeoutIds.closedelay[identifier] = setTimeout(
+					() => {
+						close(identifier, config, tooltipsRef.current, setTooltips)
+					},
+					config.delay[1] ? config.delay[1] * 500 : 1500
+				)
+				return
+			}
+		}
+
+		manageHover(event.type)
+		if (event.type === 'mouseleave') {
 			return
 		}
 
 		const targetIndex = event.target.style.zIndex
 		const tooltipIndex = targetIndex ? parseInt(targetIndex) + 2 : 3
 
-		if (outerGlobalOptions && outerGlobalOptions.single) {
+		if (globalSingleStorage) {
 			closeAll(true)
+		} else if (options.localSingle) {
+			closeAll(false)
 		}
 
 		// Generate new Tooltip.
 		const tooltip = (
 			<Tooltip
-				child={data.contentId ? children[data.contentId] : undefined}
-				clipPath={clipPaths[data.contentId] ? clipPaths[data.contentId].current : undefined}
-				commonClipPath={commonClipPath}
+				child={data.contentId && options.children ? options.children[data.contentId] : undefined}
+				clipPath={options.clipPaths && options.clipPaths[data.contentId] ? options.clipPaths[data.contentId] : undefined}
+				commonClipPath={options.commonClipPath}
 				position={config.position}
 				anchor={targetElement}
 				key={identifier}
@@ -126,16 +131,20 @@ function useTooltip({ children, defaultConfigString, clipPaths = {}, commonClipP
 				magnetCoordinates={{ x: event.clientX, y: event.clientY }}
 				maxWidth={config.maxw}
 				close={close}
+				manageHover={manageHover}
 			/>
 		)
 
 		if (config.delay && event.type === 'mouseenter') {
-			timeoutIds.hover[identifier] = setTimeout(() => {
-				setTooltips({
-					...tooltipsRef.current,
-					[identifier]: tooltip,
-				})
-			}, config.delay[0] * 500)
+			timeoutIds.hover[identifier] = setTimeout(
+				() => {
+					setTooltips({
+						...tooltipsRef.current,
+						[identifier]: tooltip,
+					})
+				},
+				config.delay[0] ? config.delay[0] * 500 : 500
+			)
 		} else {
 			setTooltips({
 				...tooltipsRef.current,
@@ -173,7 +182,6 @@ function useTooltip({ children, defaultConfigString, clipPaths = {}, commonClipP
 	}
 
 	function closeAll(global) {
-		console.log(globalStorage)
 		;(global ? globalStorage : allTooltips).forEach(tt => {
 			tt.props.close(tt.props.identifier, { animation: [tt.props.animation, tt.props.animationLength] })
 			// globalStateStorage.forEach(close =>
@@ -185,4 +193,4 @@ function useTooltip({ children, defaultConfigString, clipPaths = {}, commonClipP
 	return [allTooltips, tooltipEventHandler, closeAll]
 }
 
-export default useTooltip
+export default useUndertool

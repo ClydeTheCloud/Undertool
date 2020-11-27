@@ -1,37 +1,19 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 
-import useTooltip from './useTooltip/useTooltip'
 import './App.css'
-import Click from './Components/Sections/Click'
-import Test from './Components/InnerComponent'
-import Hover from './Components/Sections/Hover'
-import Scroll from './Components/Sections/Scroll'
-import Introduction from './Components/Sections_new/Introduction'
-import Content from './Components/Sections_new/Content'
-import Configuration from './Components/Sections_new/Configuration'
+import Introduction from './Components/Sections/Introduction'
+import Content from './Components/Sections/Content'
+import Configuration from './Components/Sections/Configuration'
+import Arguments from './Components/Sections/Arguments'
+import useSidebar from './Components/Sidebar'
 
 function App() {
-	const scrollRef = useRef()
-	const [tooltips, handler] = useTooltip({
-		children: {
-			thirdBox: <Test text="This is a click-tooltip with component" />,
-			seventhBox: <Test text="This is a hover-tooltip with component" />,
-		},
-		clipPaths: {
-			scrollBox: scrollRef,
-		},
-	})
-
-	useEffect(() => {
-		// scrollRef.current = document.querySelector('.scroller-outer')
-		// document.querySelector('.scroller-inner > .box').click()
-	}, [])
-
+	const Sidebar = useSidebar()
 	// TODO cool presentation (with tooltips, obviously)
-	// TODO fix arrows
-	// TODO autoclose on mouseleave event (from tooltip itself, not anchor element)
+	// TODO rename everything to useUndertool
 
 	// ----------==========########## DONE ##########==========---------
+	// fix arrows
 	// explicit no-animation option (and other options like that)
 	// ability to merge common and specific configs instead of overwriting
 	// Single-tooltip-at-a-time option (out of all tooltips or out of specific set) || single-tooltip option
@@ -57,14 +39,26 @@ function App() {
 
 	return (
 		<>
-			{tooltips}
+			{Sidebar}
 			<header>
 				<h1>Undertool</h1>
 			</header>
-
 			<Introduction />
 			<Content />
 			<Configuration />
+			<Arguments />
+			<footer>
+				<div>
+					<p>
+						Powered by <a href="https://popper.js.org/">Popper.js</a>.
+					</p>
+				</div>
+				<div>
+					<p>
+						Made by <a href="https://clydethecloud.github.io/">Alexandr Diakov</a>. 2020
+					</p>
+				</div>
+			</footer>
 		</>
 	)
 }

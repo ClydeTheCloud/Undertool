@@ -2,12 +2,19 @@ import React from 'react'
 import { Prism as Highlight } from 'react-syntax-highlighter'
 import { materialOceanic } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
-import { DataStringContent, dataStringContentCode, ArgumentChildrenContent, argumentChildrenContentCode } from '../code_snippets'
+import {
+	DataStringContent,
+	dataStringContentCode,
+	ArgumentChildrenContent,
+	argumentChildrenContentCode,
+} from '../../Assets/code_snippets'
 
 function Content() {
 	return (
 		<>
-			<h3 className="row-header click">Content</h3>
+			<h3 className="row-header click" id="content">
+				Content
+			</h3>
 			<div className="intro-wrapper">
 				<p>You can set content of a tooltip in two ways. First is setting data attribute on your event target:</p>
 				<Highlight language="javascript" style={materialOceanic}>

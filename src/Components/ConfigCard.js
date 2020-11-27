@@ -6,7 +6,11 @@ function ConfigCard({ title, desc, options }) {
 			<div className="possible-info">
 				<p className="possible-title">{title}:</p>
 				<div className="divider" />
-				<p className="possible-description">{desc}</p>
+				{desc.split('\n').map((line, index) => (
+					<p key={index} className="possible-description">
+						{line}
+					</p>
+				))}
 			</div>
 			<div className="possible-options">
 				<ul className="possible-list">

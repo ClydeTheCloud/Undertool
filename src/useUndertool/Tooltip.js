@@ -19,23 +19,24 @@ class Tooltip extends React.Component {
 		const arrowWrapper = document.getElementById(this.arrowWrapperId)
 
 		switch (this.props.arrow) {
+			default:
 			case 'arrow:sm':
-				arrowWrapper.style.height = '10px'
-				arrowWrapper.style.width = '10px'
+				arrowWrapper.style.height = '14.14px'
+				arrowWrapper.style.width = '14.14px'
 				arrow.style.height = '10px'
 				arrow.style.width = '10px'
 				arrowWrapper.classList.replace('tooltip-arrow-wrapper', 'tooltip-arrow-wrapper-sm')
 				break
 			case 'arrow:md':
-				arrowWrapper.style.height = '20px'
-				arrowWrapper.style.width = '20px'
+				arrowWrapper.style.height = '28.28px'
+				arrowWrapper.style.width = '28.28px'
 				arrow.style.height = '20px'
 				arrow.style.width = '20px'
 				arrowWrapper.classList.replace('tooltip-arrow-wrapper', 'tooltip-arrow-wrapper-md')
 				break
 			case 'arrow:lg':
-				arrowWrapper.style.height = '30px'
-				arrowWrapper.style.width = '30px'
+				arrowWrapper.style.height = '42.42px'
+				arrowWrapper.style.width = '42.42px'
 				arrow.style.height = '30px'
 				arrow.style.width = '30px'
 				arrowWrapper.classList.replace('tooltip-arrow-wrapper', 'tooltip-arrow-wrapper-lg')
@@ -51,8 +52,6 @@ class Tooltip extends React.Component {
 			case 'arrow:none':
 				arrowWrapper.style.display = 'none'
 				arrow.style.display = 'none'
-				break
-			default:
 				break
 		}
 	}
@@ -79,6 +78,9 @@ class Tooltip extends React.Component {
 		},
 
 		tooltipArrowWrapper: {
+			display: 'flex',
+			alignItems: 'center',
+			justifyContent: 'center',
 			position: 'absolute',
 			width: '10px',
 			height: '10px',
@@ -109,12 +111,6 @@ class Tooltip extends React.Component {
 		let fixedOrAbsolute = this.props.fixed ? 'fixed' : 'absolute'
 		const clipPath = this.props.clipPath || this.props.commonClipPath
 
-		if (paddingOffset === 0) {
-			const arrowWrapper = document.getElementById(this.arrowWrapperId)
-			const wrapperWidth = parseInt(window.getComputedStyle(arrowWrapper, null).width)
-			paddingOffset = (wrapperWidth * 1.414213562373095 - wrapperWidth) / 2
-		}
-
 		const magnet = { x: this.props.magnetCoordinates.x, y: this.props.magnetCoordinates.y }
 		const rect = this.props.anchor.getBoundingClientRect()
 		const magnetOffsets = { x: magnet.x - rect.x, y: magnet.y - rect.y }
@@ -124,8 +120,8 @@ class Tooltip extends React.Component {
 			enabled: Boolean(this.props.magnet),
 			phase: 'beforeRead',
 			fn({ state }) {
-				state.rects.reference.height = 0
-				state.rects.reference.width = 0
+				state.rects.reference.height = 30
+				state.rects.reference.width = 30
 			},
 		}
 		const magnetStep2 = {
@@ -133,8 +129,8 @@ class Tooltip extends React.Component {
 			enabled: Boolean(this.props.magnet),
 			phase: 'main',
 			fn({ state }) {
-				state.modifiersData.popperOffsets.x += magnetOffsets.x
-				state.modifiersData.popperOffsets.y += magnetOffsets.y
+				state.modifiersData.popperOffsets.x += magnetOffsets.x - 15
+				state.modifiersData.popperOffsets.y += magnetOffsets.y - 15
 			},
 		}
 
@@ -158,9 +154,7 @@ class Tooltip extends React.Component {
 			document.getElementById(this.arrowId).style.borderColor = border
 		}
 
-		if (this.props.arrow) {
-			this.setArrow()
-		}
+		this.setArrow()
 	}
 
 	render() {
@@ -170,6 +164,8 @@ class Tooltip extends React.Component {
 				style={{ zIndex: 55 }}
 				className={'tooltip-helper-class'}
 				onClick={e => (e.nativeEvent.fired = true)}
+				onMouseEnter={e => this.props.manageHover(e.type)}
+				onMouseLeave={e => this.props.manageHover(e.type)}
 			>
 				<div style={this.styles.tooltipWrapper} id={this.wrapperId}>
 					<div
@@ -178,10 +174,7 @@ class Tooltip extends React.Component {
 						className={`${this.props.customClass || 'tooltip-default-style'} `}
 						key={this.props.identifier}
 					>
-						<div style={this.styles.tooltipContent}>
-							{this.props.child || this.props.tooltipTextContent}
-							{/* {this.setTimer()} */}
-						</div>
+						<div style={this.styles.tooltipContent}>{this.props.child || this.props.tooltipTextContent}</div>
 					</div>
 					<div
 						style={this.styles.tooltipArrowWrapper}

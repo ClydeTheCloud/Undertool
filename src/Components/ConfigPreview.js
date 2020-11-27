@@ -1,6 +1,6 @@
 import React from 'react'
 
-import useTooltip from '../useTooltip/useTooltip'
+import useUndertool from '../useUndertool/useUndertool'
 
 const possibleValues = [
 	{

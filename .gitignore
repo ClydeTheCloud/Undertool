@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
+/src/useUndertool/node_modules
+/src/useUndertool/lib
 
 # testing
 /coverage
