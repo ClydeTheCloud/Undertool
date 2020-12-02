@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-scroll'
 
 function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
 	return (
@@ -6,16 +7,52 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
 			<SideButton isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 			<div className={`sidebar sidebar-${isSidebarOpen ? 'open' : 'closed'}`}>
 				<div className="sidebar-item">
-					<a href="#introduction">Introduction</a>
+					<Link
+						className="sidebar-link"
+						activeClass="sidebar-link-active"
+						to="introduction"
+						smooth={true}
+						duration={500}
+						spy={true}
+					>
+						Introduction
+					</Link>
 				</div>
 				<div className="sidebar-item">
-					<a href="#content">Content</a>
+					<Link
+						className="sidebar-link"
+						activeClass="sidebar-link-active"
+						to="content"
+						smooth={true}
+						duration={500}
+						spy={true}
+					>
+						Content
+					</Link>
 				</div>
 				<div className="sidebar-item">
-					<a href="#configuration">Configuration</a>
+					<Link
+						className="sidebar-link"
+						activeClass="sidebar-link-active"
+						to="configuration"
+						smooth={true}
+						duration={500}
+						spy={true}
+					>
+						Configuration
+					</Link>
 				</div>
 				<div className="sidebar-item">
-					<a href="#arguments">Arguments</a>
+					<Link
+						className="sidebar-link"
+						activeClass="sidebar-link-active"
+						to="arguments"
+						smooth={true}
+						duration={500}
+						spy={true}
+					>
+						Arguments
+					</Link>
 				</div>
 			</div>
 		</>

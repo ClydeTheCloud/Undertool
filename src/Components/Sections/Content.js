@@ -2,12 +2,7 @@ import React from 'react'
 import { Prism as Highlight } from 'react-syntax-highlighter'
 import { materialOceanic } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
-import {
-	DataStringContent,
-	dataStringContentCode,
-	ArgumentChildrenContent,
-	argumentChildrenContentCode,
-} from '../../Assets/code_snippets'
+import { ChildrenExample, childrenExampleCode, ContentExample, contentExampleCode } from '../../Assets/code_snippets'
 
 function Content() {
 	return (
@@ -18,10 +13,10 @@ function Content() {
 			<div className="intro-wrapper">
 				<p>You can set content of a tooltip in two ways. First is setting data attribute on your event target:</p>
 				<Highlight language="javascript" style={materialOceanic}>
-					{dataStringContentCode}
+					{contentExampleCode}
 				</Highlight>
 				<div className="box-wrapper">
-					<DataStringContent />
+					<ContentExample />
 				</div>
 				<p>
 					Another way is to provide an object under <code className="inline-code">children</code> property. In this object
@@ -29,10 +24,10 @@ function Content() {
 					<code className="inline-code">data-tooltip-content-id</code> attribute on your event target:
 				</p>
 				<Highlight language="javascript" style={materialOceanic}>
-					{argumentChildrenContentCode}
+					{childrenExampleCode}
 				</Highlight>
 				<div className="wrapper">
-					<ArgumentChildrenContent />
+					<ChildrenExample />
 				</div>
 			</div>
 		</>

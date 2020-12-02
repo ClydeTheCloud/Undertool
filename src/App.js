@@ -9,34 +9,6 @@ import useSidebar from './Components/Sidebar'
 
 function App() {
 	const Sidebar = useSidebar()
-	// TODO cool presentation (with tooltips, obviously)
-	// TODO rename everything to useUndertool
-
-	// ----------==========########## DONE ##########==========---------
-	// fix arrows
-	// explicit no-animation option (and other options like that)
-	// ability to merge common and specific configs instead of overwriting
-	// Single-tooltip-at-a-time option (out of all tooltips or out of specific set) || single-tooltip option
-	// refactor attributes into data-properties
-	// fix bubbling and capturing
-	// nesting logic(removed it, made it the other way)
-	// fixed/relative logic
-	// clipping boundary (set by user)
-	// animation prop in config (refactor to be like delay prop(array of animation name and animation length))
-	// ???rewrite configParser??? (maybe...) // made some subtle changes
-	// merge opendelay and closedelay (maybe like this: delay:0-3)
-	// default options (no 'min-config' bullshit)
-	// add all missing positioning options
-	// flip option
-	// different arrows
-
-	// ----------==========########## CAN'T DO ##########==========---------
-	// click on empty space to close a tooltip(uncaptured click event?) || option to click on empty space to close tooltip
-
-	// ----------==========########## NOTES for presentation ##########==========---------
-	// Do not use % in border-radius of a custom tooltip class
-	// useRef and useEffect for a toolip clip-path
-
 	return (
 		<>
 			{Sidebar}

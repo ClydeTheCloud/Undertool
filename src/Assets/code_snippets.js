@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import useUndertool from '../useUndertool/useUndertool.js'
+import useUndertool from 'undertool'
 
 export function Example() {
 	const [tooltips, handler] = useUndertool()
@@ -13,7 +13,7 @@ export function Example() {
 }
 
 export const exampleCode = `function Example() {
-	const [tooltips, handler] = useUndertool({})
+	const [tooltips, handler] = useUndertool()
 
 	return (
 		<div>
@@ -24,7 +24,7 @@ export const exampleCode = `function Example() {
 }`
 
 export function FineTune() {
-	const [tooltips, handler] = useUndertool({})
+	const [tooltips, handler] = useUndertool()
 
 	return (
 		<div>
@@ -40,7 +40,7 @@ export function FineTune() {
 }
 
 export const finetuneCode = `function FineTune() {
-	const [tooltips, handler] = useUndertool({})
+	const [tooltips, handler] = useUndertool()
 
 	return (
 		<div>
@@ -61,8 +61,8 @@ export const finetuneCSS = `.fancy-tooltip-class {
 }`
 
 export function CloseAll() {
-	const [tooltips, handler, closeAll] = useUndertool({})
-	const [anotherTooltips, anotherHandler] = useUndertool({}) //another instance
+	const [tooltips, handler, closeAll] = useUndertool()
+	const [anotherTooltips, anotherHandler] = useUndertool() //another instance
 
 	return (
 		<div style={{ margin: '0 auto' }}>
@@ -101,8 +101,8 @@ export function CloseAll() {
 }
 
 export const closeAllCode = `function CloseAll() {
-	const [tooltips, handler, closeAll] = useUndertool({})
-	const [anotherTooltips, anotherHandler] = useUndertool({}) //another instance
+	const [tooltips, handler, closeAll] = useUndertool()
+	const [anotherTooltips, anotherHandler] = useUndertool() //another instance
 
 	return (
 		<div style={{ margin: '0 auto' }}>
@@ -140,8 +140,8 @@ export const closeAllCode = `function CloseAll() {
 	)
 }`
 
-export function DataStringContent() {
-	const [tooltips, handler] = useUndertool({})
+export function ContentExample() {
+	const [tooltips, handler] = useUndertool()
 	return (
 		<div>
 			<div className="box three" onMouseEnter={handler} onMouseLeave={handler} data-tooltip-content="This is easy"></div>
@@ -150,8 +150,8 @@ export function DataStringContent() {
 	)
 }
 
-export const dataStringContentCode = `function DataStringContent() {
-	const [tooltips, handler] = useUndertool({})
+export const contentExampleCode = `function ContentExample() {
+	const [tooltips, handler] = useUndertool()
 	return (
 		<div>
 			<div className="box three" onMouseEnter={handler} onMouseLeave={handler} data-tooltip-content="This is easy"></div>
@@ -160,7 +160,7 @@ export const dataStringContentCode = `function DataStringContent() {
 	)
 }`
 
-export function ArgumentChildrenContent() {
+export function ChildrenExample() {
 	function InnerComponent() {
 		return (
 			<p style={{ backgroundColor: 'white', color: 'black', fontWeight: 'bold', padding: '.5em' }}>Or even another component!</p>
@@ -182,7 +182,7 @@ export function ArgumentChildrenContent() {
 	)
 }
 
-export const argumentChildrenContentCode = `function ArgumentChildrenContent() {
+export const childrenExampleCode = `function ChildrenExample() {
 	function InnerComponent() {
 		return (
 			<p style={{ backgroundColor: 'white', color: 'black', fontWeight: 'bold', padding: '.5em' }}>Or even another component!</p>
@@ -208,18 +208,18 @@ export function ClipPath() {
 	const clipRef = useRef()
 	const [tooltips, handler] = useUndertool({
 		clipPaths: {
-			scrollBox: clipRef.current,
+			scrollBox: clipRef,
 		},
 	})
 
 	useEffect(() => {
-		clipRef.current = document.querySelector('.scroller-outer')
+		clipRef.current = document.getElementById('scroller-outer')
 		document.querySelector('.scroller-inner > .box').click()
 	}, [])
 
 	return (
 		<>
-			<div className="scroller-outer">
+			<div id="scroller-outer">
 				<div className="scroller-inner">
 					<div
 						className="box one"
@@ -238,18 +238,18 @@ export const clipPathCode = `function ClipPath() {
 	const clipRef = useRef()
 	const [tooltips, handler] = useUndertool({
 		clipPaths: {
-			scrollBox: clipRef.current,
+			scrollBox: clipRef,
 		},
 	})
 
 	useEffect(() => {
-		clipRef.current = document.querySelector('.scroller-outer')
+		clipRef.current = document.getElementById('scroller-outer')
 		document.querySelector('.scroller-inner > .box').click()
 	}, [])
 
 	return (
 		<>
-			<div className="scroller-outer">
+			<div id="scroller-outer">
 				<div className="scroller-inner">
 					<div
 						className="box one"

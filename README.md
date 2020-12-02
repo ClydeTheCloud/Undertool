@@ -12,7 +12,7 @@ or CDN
 
 ### https://unpkg.com/undertool
 
-### const [tooltips, handler] = useUndertool({})
+`const [tooltips, handler] = useUndertool()`
 
 Put tooltips anywhere in your component and it will render all tooltips.
 
@@ -25,4 +25,5 @@ More info here
 ## https://clydethecloud.github.io/undertool/
 
 Source code for Undertool can be found here
+
 ## https://github.com/ClydeTheCloud/Undertool-npm-package-

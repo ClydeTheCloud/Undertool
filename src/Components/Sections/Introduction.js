@@ -20,6 +20,7 @@ function Intro() {
 						<code className="inline-code">npm i undertool</code> or CDN <span>https://unpkg.com/undertool</span>
 					</p>
 				</div>
+				<p>Usage:</p>
 				<Highlight language="javascript" style={materialOceanic}>
 					{'const [tooltips, handler] = useUndertool({})'}
 				</Highlight>
@@ -31,7 +32,7 @@ function Intro() {
 				</p>
 				<p>Undertool works out of the box with minimal configuration.</p>
 				<p>
-					Undertool has an fall-back config, so if you're lazy like me, you can just throw handler and{' '}
+					Undertool has an fall-back config, so if you're feeling lazy you can just throw handler and{' '}
 					<code className="inline-code">data-tooltip-content</code> on an element and call it a day!
 				</p>
 				<Highlight language="javascript" style={materialOceanic}>

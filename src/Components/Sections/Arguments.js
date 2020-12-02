@@ -30,8 +30,8 @@ function Arguments() {
 				</p>
 				<p>
 					<code className="inline-code">clipPaths</code> propety takes an object. In that object use keys as IDs, same as in{' '}
-					<code className="inline-code">children</code> propety. Values for those keys should be an element that will work as
-					cliping path for tooltip.
+					<code className="inline-code">children</code> propety. Values for those keys should be a reference to an element
+					that will work as cliping path for tooltip.
 				</p>
 
 				<Highlight language="javascript" style={materialOceanic}>

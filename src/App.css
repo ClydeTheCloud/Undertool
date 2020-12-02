@@ -137,7 +137,7 @@ h3 {
 	padding: 10px;
 }
 
-.scroller-outer {
+#scroller-outer {
 	overflow: scroll;
 	width: 300px;
 	height: 300px;
@@ -178,38 +178,6 @@ h3 {
 	font-size: 1.5em;
 }
 
-/* body {
-	--tooltip-arrow-size: 10px;
-	--tooltip-arrow-offset: calc(var(--tooltip-arrow-size) * 14.14213562373095);
-} */
-
-/* --------------------------------------------- */
-/* TODO remove this from CSS, implement using JS */
-/* .tooltip-arrow-wrapper,
-.tooltip-arrow-inner {
-	position: absolute;
-	width: 10px;
-	height: 10px;
-	z-index: -1;
-}
-
-.tooltip-arrow-inner {
-	transform: rotate(45deg);
-	background: #333;
-} */
-
-/* TODO remove this from CSS, implement using JS */
-/* --------------------------------------------- */
-
-/* .tooltip-arrow {
-	position: absolute;
-	width: 8px;
-	height: 8px;
-	border-color: red;
-	border-style: solid;
-	zIndex: this.props.index - 1,
-} */
-
 .intro-wrapper {
 	margin: 0 auto;
 	max-width: 800px;
@@ -226,8 +194,6 @@ h3 {
 .close-all-wrapper {
 	display: flex;
 	justify-content: space-around;
-	/* align-items: center; */
-	/* align-content: center; */
 	flex-wrap: wrap;
 }
 
@@ -395,17 +361,19 @@ h3 {
 .sidebar-item {
 	padding: 1em 0;
 }
-.sidebar-item > a {
+.sidebar-link {
 	color: white;
 	text-decoration: none;
 	transition: 0.2s;
+	cursor: pointer;
 }
-.sidebar-item > a:hover {
+.sidebar-link:hover {
 	color: #1794a5;
 }
-/* .sidebar-item > a:visited {
-	color: #1794a5;
-} */
+
+.sidebar-link-active {
+	color: #f71e35;
+}
 
 footer {
 	padding: 0.5em 0;

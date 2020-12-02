@@ -1,6 +1,6 @@
 {
-	"name": "react-tooltip",
-	"version": "0.1.0",
+	"name": "undertool-site",
+	"version": "1.0.0",
 	"private": true,
 	"dependencies": {
 		"@popperjs/core": "^2.4.4",
@@ -10,7 +10,9 @@
 		"react": "^16.13.1",
 		"react-dom": "^16.13.1",
 		"react-scripts": "^3.4.3",
-		"react-syntax-highlighter": "^15.3.0"
+		"react-scroll": "^1.8.1",
+		"react-syntax-highlighter": "^15.3.0",
+		"undertool": "^1.0.3"
 	},
 	"scripts": {
 		"start": "react-scripts start",

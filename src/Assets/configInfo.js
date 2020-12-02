@@ -1,4 +1,4 @@
-import { possibleValues } from '../useUndertool/utils/configParser'
+import { possibleValues } from '../../node_modules/undertool/src/utils/configParser'
 
 const configInfo = {
 	position: {
