@@ -69,6 +69,12 @@ const configInfo = {
 		Provide number and units like "maxw:150px" or "maxw:5em".`,
 		options: possibleValues[10].maxw.split(' '),
 	},
+	hideable: {
+		title: 'Hideable',
+		desc: `If turned on, tooltip will be hidden if refference elemen is not visible.
+		Turned on by default.`,
+		options: possibleValues[11].hideable.split(' '),
+	},
 }
 
 export default configInfo

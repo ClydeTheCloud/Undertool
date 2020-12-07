@@ -13,7 +13,7 @@
 		"react-scripts": "^3.4.3",
 		"react-scroll": "^1.8.1",
 		"react-syntax-highlighter": "^15.3.0",
-		"undertool": "^1.0.3"
+		"undertool": "^1.0.5"
 	},
 	"scripts": {
 		"start": "react-scripts start",
