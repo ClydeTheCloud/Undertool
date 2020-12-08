@@ -2,12 +2,16 @@ import React, { useState } from 'react'
 import { Link } from 'react-scroll'
 
 function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
+	function close() {
+		setIsSidebarOpen(false)
+	}
 	return (
 		<>
 			<SideButton isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 			<div className={`sidebar sidebar-${isSidebarOpen ? 'open' : 'closed'}`}>
 				<div className="sidebar-item">
 					<Link
+						onClick={close}
 						className="sidebar-link"
 						activeClass="sidebar-link-active"
 						to="introduction"
@@ -20,6 +24,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
 				</div>
 				<div className="sidebar-item">
 					<Link
+						onClick={close}
 						className="sidebar-link"
 						activeClass="sidebar-link-active"
 						to="content"
@@ -32,6 +37,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
 				</div>
 				<div className="sidebar-item">
 					<Link
+						onClick={close}
 						className="sidebar-link"
 						activeClass="sidebar-link-active"
 						to="configuration"
@@ -44,6 +50,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
 				</div>
 				<div className="sidebar-item">
 					<Link
+						onClick={close}
 						className="sidebar-link"
 						activeClass="sidebar-link-active"
 						to="arguments"
