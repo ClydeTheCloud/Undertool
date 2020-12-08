@@ -22,7 +22,7 @@ function Intro() {
 				</div>
 				<p>Usage:</p>
 				<Highlight language="javascript" style={materialOceanic}>
-					{'const [tooltips, handler] = useUndertool({})'}
+					{'const [tooltips, handler] = useUndertool()'}
 				</Highlight>
 				<p>
 					Put <code className="inline-code">tooltips</code> anywhere in your component and it will render all tooltips.
@@ -57,9 +57,9 @@ function Intro() {
 					<FineTune />
 				</div>
 				<p>
-					There is a third item returned to you by calling <code className="inline-code">useUndertool({})</code>, and that is
+					There is a third item returned to you by calling <code className="inline-code">useUndertool()</code>, and that is
 					special function that is able to close all open tooltips on page. By default it closes all tooltips of the same
-					instnace of <code className="inline-code">useUndertool({})</code>, but if you call it with{' '}
+					instnace of <code className="inline-code">useUndertool()</code>, but if you call it with{' '}
 					<code className="inline-code">true</code> argument, it will close all tooltips of all instnances.
 				</p>
 				<Highlight language="javascript" style={materialOceanic}>
