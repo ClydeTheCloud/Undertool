@@ -26,7 +26,7 @@ function Content() {
 				<Highlight language="javascript" style={materialOceanic}>
 					{childrenExampleCode}
 				</Highlight>
-				<div className="wrapper">
+				<div className="box-wrapper margin-v">
 					<ChildrenExample />
 				</div>
 			</div>

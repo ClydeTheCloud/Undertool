@@ -416,5 +416,11 @@ footer a:visited {
 }
 
 .installation span {
+	font-size: 1rem;
 	font-weight: bold;
+}
+
+.margin-v {
+	margin-top: 65px;
+	margin-bottom: 65px;
 }
